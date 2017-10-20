@@ -1,0 +1,60 @@
+<div class="col s12 m4 hide-on-med-and-up">
+  <div class="center-align"><img src="/img/title.png" width="100%"></div>
+  <div class="center-align"><img src="/img/logo.png" width="100%"></div>
+  <h1 class="center-align">Carer</h1>
+</div>
+
+<div class="row valign-wrapper">
+
+  <div class="col s12 m4 l2 hide-on-small-and-down">
+    <div class="center-align"><img src="/img/title.png" width="100%"></div>
+    <div class="center-align"><img src="/img/logo.png" width="100%"></div>
+    <h1 class="center-align">Carer</h1>
+  </div>
+
+  <div class="col s12 m6 l4 offset-m1 offset-l1 valign">
+    <h4 class="center-align"> Submit Reminders </h4>
+    <!-- user input fields -->
+    <input id="newtitle" type="text" placeholder="Reminder">
+    <textarea id="newdescription" placeholder="Description / Subtasks" rows="4" cols="50"></textarea>
+    <button id="submit" class="btn right" onclick="submit()">Submit</button>
+  </div>
+
+  <div class="col m1">
+  </div>
+</div>
+
+
+<br><br>
+
+<!-- list of todo items -->
+<ul class="collapsible" data-collapsible="accordion" id="list">
+  {{#each list}}
+      <li>
+        <div class="collapsible-header">
+          {{#if this.done}}
+            <input type="checkbox" id="{{this._id}}" checked="checked">
+            <label for="{{this._id}}" onclick="update('{{this._id}}', {{this.done}})"></label>
+            <strike>{{this.title}}</strike>
+          {{else}}
+            <input type="checkbox" id="{{this._id}}">
+            <label for="{{this._id}}" onclick="update('{{this._id}}', {{this.done}})"></label>
+            {{this.title}}
+          {{/if}}
+
+          <button class="btn right" onclick="deleteitem('{{this._id}}','{{this.title}}')">Delete</button>
+        </div>
+        <div class="collapsible-body"><p>{{this.description}}</p></div>
+      </li>
+  {{/each}}
+</ul>
+
+<script>
+  var socket = io.connect("https://cryptic-sea-98015.herokuapp.com/");
+
+  socket.on('itemToggled', function(data){
+    console.log('item toggled');
+    location.reload(true);
+  });
+
+</script>
