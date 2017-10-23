@@ -11,4 +11,8 @@ router.get('/test', (req, res) => {
   res.send('hello world');
 });
 
+router.get('/getAssets', (req, res) => {
+  res.json({ asstes: [{ name: 'test', location: { x: 50.1, y: 201.234243 } }] });
+});
+
 module.exports = router;
