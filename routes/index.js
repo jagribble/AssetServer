@@ -1,14 +1,14 @@
-var express = require('express');
+const express = require('express');
 
+const router = express.Router();
 
-router.get('/', function(req, res) {
-  //initialise empty array for results of db query
+router.get('/', (req, res) => {
+  // initialise empty array for results of db query
   res.render('index');
 });
 
-router.get('/test',(req,res)=>{
+router.get('/test', (req, res) => {
   res.send('hello world');
 });
 
-return router;
-};
+module.exports = router;
