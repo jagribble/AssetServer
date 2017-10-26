@@ -9,7 +9,6 @@ const client = new Client({
   ssl: true,
 });
 
-
 /**
 Create database tables
 
@@ -19,6 +18,8 @@ CREATE TABLE Asset(
   assetX FLOAT(13),
   assetY FLOAT(13),
 );
+
+
 * */
 
 client.connect();
@@ -28,8 +29,36 @@ router.get('/', (req, res) => {
   res.render('index');
 });
 
-router.get('/test', (req, res) => {
-  res.send('hello world');
+/*
+INSERT asset into database
+
+INSERT INTO Asset (assetName, assetX, assetY)
+VALUES ('testAsset', 51.34343, 0.923132);
+*/
+router.post('/insert', (req, res) => {
+  console.log(req.body.name);
+  client.query(`INSERT INTO Asset (assetName, assetX, assetY) VALUES ('${req.body.name}', ${req.body.assetX}, ${req.body.assetY})`)
+    .then((result) => {
+      console.log(result.rows[0]);
+      res.send(result);
+    })
+    .catch((e) => {
+      console.error(e.stack);
+      res.send(e);
+    });
+});
+
+
+router.get('/selectAsset', (req, res) => {
+  client.query('SELECT * FROM Asset')
+    .then((result) => {
+      console.log(result.rows[0]);
+      res.send(result.rows);
+    })
+    .catch((e) => {
+      console.error(e.stack);
+      res.send(e);
+    });
 });
 
 router.get('/getAssets', (req, res) => {
