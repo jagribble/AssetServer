@@ -26,18 +26,18 @@ CREATE TABLE orginization(
 );
 
 Using data examples from https://www.gouldspumps.com/ittgp/medialibrary/goulds/website/Literature/White%20Papers/smart_pumping_system.pdf?ext=.pdf
-CREATE TABLE Data(
-  dataID SERIAL PRIMARY KEY,
+CREATE TABLE DataType(
+  dataTypeID SERIAL PRIMARY KEY,
   dataName VARCHAR(50),
   dataUnit VARCHAR(10),
-  assetID INT FORIEGN KEY
 );
 
 CREATE TABLE DataPoint(
   dataPointID SERIAL PRIMARY KEY,
   timeStamp TIMESTAMP,
   data VARCHAR(50),
-  dataID INT,
+  assetID INT FORIEGN KEY,
+  dataTypeID INT FORIEGN KEY
 )
 * */
 
@@ -48,29 +48,16 @@ router.get('/', (req, res) => {
 });
 
 router.get('/change', (req, res) => {
-  client.query('CREATE TABLE DataPoint(dataPointID SERIAL PRIMARY KEY,timeStamp TIMESTAMP,data VARCHAR(50),dataID INT)').then((result) => {
+  client.query('CREATE TABLE DataPoint(dataPointID SERIAL PRIMARY KEY,timeStamp TIMESTAMP,data VARCHAR(50),assetID INT ,dataTypeID INT)').then((result) => {
     res.send(result);
   });
 });
 
-router.get('/data', (req, res) => {
-  client.query('SELECT * FROM Data').then((result) => {
-    res.send(result);
-  });
-});
-
-router.get('/datapoints', (req, res) => {
-  client.query('SELECT * FROM DataPoint').then((result) => {
-    res.send(result);
-  });
-});
 
 /*
-INSERT asset into database
-
-INSERT INTO Asset (assetName, assetX, assetY)
-VALUES ('testAsset', 51.34343, 0.923132);
+INSERT routes
 */
+// INSERT asset refering to an orginazarion
 router.post('/:orginization/insert/asset', (req, res) => {
   client.query(`SELECT orginizationID FROM orginization WHERE name='${req.params.orginization}'`).then((organization) => {
     console.log(organization);
@@ -90,20 +77,33 @@ router.post('/insert/asset', (req, res) => {
     });
 });
 
-router.post('/intert/asset/:assetID/data', (req, res) => {
-  client.query(`INSERT INTO Data (dataName, dataUnit, assetID) VALUES ('${req.body.name}','${req.body.unit}',${req.params.assetID})`).then((result) => {
+// INSERT a data type refering to an asset
+router.post('/intert/datatype', (req, res) => {
+  client.query(`INSERT INTO Data (dataName, dataUnit) VALUES ('${req.body.name}','${req.body.unit}'`).then((result) => {
     res.send(result);
   });
 });
 
-router.post('/insert/asset/:assetID/data/:dataID/datapoint', (req, res) => {
-  client.query(`INSERT INTO DataPoint (timeStamp, data,dataID) VALUES (${req.body.time},${req.body.data},${req.params.dataID})`).then((result) => {
+// INSERT a datapoint for an asset
+router.post('/insert/asset/:assetID/datapoint/datatype/:dataTypeID', (req, res) => {
+  client.query(`INSERT INTO DataPoint (timeStamp, data,assetID,dataTypeID) VALUES (${req.body.time},${req.body.data},${req.params.assetID},${req.params.dataTypeID})`).then((result) => {
     res.send(result);
   });
 });
+
+// INSERT an organization
+router.post('/insert/orginization', (req, res) => {
+  console.log(req.body.name);
+  client.query(`INSERT INTO orginization (name) VALUES ('${req.body.name}')`)
+    .then((result) => {
+      console.log(result);
+      res.send(result);
+    });
+});
 /*
-Get all assets from an organization
+SELECT routes
 */
+// SELECT all assets owned by an orginization
 router.get('/:orginization/assets', (req, res) => {
   console.log(`SELECT * FROM Asset WHERE orginizationID=(SELECT orginizationID FROM orginization WHERE name='${req.params.orginization}')`);
   client.query(`SELECT * FROM Asset WHERE orginizationID=(SELECT orginizationID FROM orginization WHERE name='${req.params.orginization}')`).then((result) => {
@@ -111,27 +111,14 @@ router.get('/:orginization/assets', (req, res) => {
   });
 });
 
+// SELECT asset where the assetID matches
 router.get('/:orginization/asset/:id', (req, res) => {
   client.query(`SELECT * FROM Asset WHERE assetID=${req.params.id}`).then((result) => {
     res.send(result);
   });
 });
 
-
-router.post('/insert/orginization', (req, res) => {
-  console.log(req.body.name);
-  client.query(`INSERT INTO orginization (name) VALUES ('${req.body.name}')`)
-    .then((result) => {
-      console.log(result);
-      res.send(result);
-    })
-    .catch((e) => {
-      console.error(e.stack);
-      res.send(e);
-    });
-});
-
-
+// SELECT ALL assets
 router.get('/assets', (req, res) => {
   client.query('SELECT * FROM Asset')
     .then((result) => {
@@ -144,6 +131,7 @@ router.get('/assets', (req, res) => {
     });
 });
 
+// SELECT ALL orginization
 router.get('/orginization', (req, res) => {
   client.query('SELECT * FROM orginization')
     .then((result) => {
@@ -156,8 +144,19 @@ router.get('/orginization', (req, res) => {
     });
 });
 
-router.get('/getAssets', (req, res) => {
-  res.json({ asstes: [{ name: 'test', location: { x: 50.1, y: 201.234243 } }] });
+// SELECT all data types
+router.get('/data', (req, res) => {
+  client.query('SELECT * FROM Data').then((result) => {
+    res.send(result);
+  });
 });
+
+// SELECT all datapoints
+router.get('/datapoints', (req, res) => {
+  client.query('SELECT * FROM DataPoint').then((result) => {
+    res.send(result);
+  });
+});
+
 
 module.exports = router;
