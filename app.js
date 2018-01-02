@@ -3,9 +3,26 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
+
+const jwt = require('express-jwt');
+const jwks = require('jwks-rsa');
 const index = require('./routes/index');
 
 const app = express();
+
+const jwtCheck = jwt({
+  secret: jwks.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: 'https://app79553870.auth0.com/.well-known/jwks.json',
+  }),
+  audience: 'https://assetar-stg.herokuapp.com/',
+  issuer: 'https://app79553870.auth0.com/',
+  algorithms: ['RS256'],
+});
+
+
 console.log('running app.js');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -20,9 +37,12 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.use('/', index);
+app.use('/', jwtCheck, index);
 
-
+app.use('/check', jwtCheck, (req, res, next) => {
+  res.send('successful');
+  next();
+});
 // app.get('/', (req, res) => {
 //   // initialise empty array for results of db query
 //   res.send('hello');
