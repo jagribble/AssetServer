@@ -4,11 +4,11 @@ const path = require('path');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 
+const app = express();
 const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
 const index = require('./routes/index');
 
-const app = express();
 
 const jwtCheck = jwt({
   secret: jwks.expressJwtSecret({
