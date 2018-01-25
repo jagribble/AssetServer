@@ -10,7 +10,7 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table';
-import fetch from 'node-fetch';
+import 'whatwg-fetch';
 import $ from 'jquery';
 // import Auth from './Auth/Auth.js';
 
@@ -30,10 +30,11 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: {},
+      data: [],
       token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlJrSTVNREkyUVRZelFVUXhNamN6UlRjd05FUXdRa05FTUVFM1JVWTRNelJFUTBReFFUVkNOdyJ9.eyJpc3MiOiJodHRwczovL2FwcDc5NTUzODcwLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1YTUzZmQxN2NmYjMxYTI3ODkzNDUyZGYiLCJhdWQiOlsiaHR0cHM6Ly9hc3NldGFyLXN0Zy5oZXJva3VhcHAuY29tLyIsImh0dHBzOi8vYXBwNzk1NTM4NzAuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTUxNjgyNDQ4MiwiZXhwIjoxNTE2OTEwODgyLCJhenAiOiIyQXFmcm40azI0VkV2d0tjdTBXbVJsTWdqNlNrSVU2WiIsInNjb3BlIjoib3BlbmlkIHByb2ZpbGUgcmVhZDphc3NldHMiLCJndHkiOiJwYXNzd29yZCJ9.UT-ziUChuvWE2ezktTNDc-Fc5k2FQtOSuuEbufVUxLeq189Gvck5XNH4Vma-Qa6jF4cUKCu0nVjU4mLueilKAey3WT3DU_yT7bhkBHhc3uuDlng2PCySKWbBroR0X0c9rWhJALI9N4XipPhoXcxxH2D_GO6QWzkpdKDRrbATdVo-GmVCJKuCHuYgUtcX4VvxKFLgiv6okYL9geRvKvK6NAL3m1XQQ4K9As2wAjlE0lQKEVj2IF0ancw6r3QXzju7PvJncjN9uRN-BODOC9zbcW3qy3GCwsyHg_gqdodfLDSnuxIVHKQ3VpTpYm42e77TmTVErQIUZPAK95uXwCjRPg',
     };
     this.getData = this.getData.bind(this);
+    this.getAssetRows = this.getAssetRows.bind(this);
     // const auth = new Auth();
     // auth.login();
   }
@@ -42,31 +43,47 @@ export default class Home extends Component {
     this.getData();
   }
 
+  getAssetRows() {
+    return this.state.data.map((row) => {
+      // const jsonRow = JSON.parse(row);
+      return (
+        <TableRow key={row.assetid}>
+          <TableRowColumn>{row.assetid}</TableRowColumn>
+          <TableRowColumn>{row.assetname}</TableRowColumn>
+          <TableRowColumn>{row.assetx}</TableRowColumn>
+          <TableRowColumn>{row.assety}</TableRowColumn>
+        </TableRow>
+      );
+    });
+  }
+
   getData() {
     console.log(`Bearer ${this.state.token}`);
-    $.ajax({
-      url: 'https://assetar-stg.herokuapp.com/api/assets',
-      header: {
-        Authorization: `Bearer ${this.state.token}`,
-        contentType: 'application/json',
-        AccessControlAllowHeaders: 'Content-Type',
-      },
-      success(result) {
-        console.log('result');
-        this.setState({ data: result.json() });
-      },
-    });
-    // fetch('https://assetar-stg.herokuapp.com/api/assets', {
+    // $.ajax({
+    //   url: '/api/assets',
     //   header: {
     //     Authorization: `Bearer ${this.state.token}`,
+    //     contentType: 'application/json',
+    //     AccessControlAllowHeaders: 'Content-Type',
     //   },
-    // }).then((result) => {
-    //   console.log('result');
-    //   this.setState({ data: result.json() });
-    // }).catch((error) => {
-    //   console.error(error);
-    //   this.setState({ data: error });
+    //   success(result) {
+    //     console.log(result);
+    //     this.setState({ data: result.rows });
+    //   },
     // });
+    fetch('http://assetar-stg.herokuapp.com/api/assets', {
+      header: {
+        Authorization: `Bearer ${this.state.token}`,
+      },
+    }).then((result) => {
+      console.log('result');
+      return result.json();
+    }).catch((error) => {
+      console.error(error);
+      this.setState({ data: error });
+    }).then((data) => {
+      this.setState({ data: data.rows });
+    });
     // fetch('https://app79553870.auth0.com/oauth/token', {
     //   method: 'POST',
     //   header: { contentType: 'application/json', AccessControlAllowOrigin: '*' },
@@ -95,7 +112,7 @@ export default class Home extends Component {
           <Card style={{ margin: '10px' }}>
             <CardText>
               <h3>AssetAR Assets</h3>
-              <p>{JSON.stringify(this.state.data)}</p>
+
               <Table>
                 <TableHeader
                   displaySelectAll={false}
@@ -111,36 +128,7 @@ export default class Home extends Component {
                 <TableBody
                   displayRowCheckbox={false}
                 >
-                  <TableRow>
-                    <TableRowColumn>1</TableRowColumn>
-                    <TableRowColumn>John Smith</TableRowColumn>
-                    <TableRowColumn>Employed</TableRowColumn>
-                    <TableRowColumn>1</TableRowColumn>
-                  </TableRow>
-                  <TableRow>
-                    <TableRowColumn>2</TableRowColumn>
-                    <TableRowColumn>Randal White</TableRowColumn>
-                    <TableRowColumn>Unemployed</TableRowColumn>
-                    <TableRowColumn>1</TableRowColumn>
-                  </TableRow>
-                  <TableRow>
-                    <TableRowColumn>3</TableRowColumn>
-                    <TableRowColumn>Stephanie Sanders</TableRowColumn>
-                    <TableRowColumn>Employed</TableRowColumn>
-                    <TableRowColumn>1</TableRowColumn>
-                  </TableRow>
-                  <TableRow>
-                    <TableRowColumn>4</TableRowColumn>
-                    <TableRowColumn>Steve Brown</TableRowColumn>
-                    <TableRowColumn>Employed</TableRowColumn>
-                    <TableRowColumn>1</TableRowColumn>
-                  </TableRow>
-                  <TableRow>
-                    <TableRowColumn>5</TableRowColumn>
-                    <TableRowColumn>Christopher Nolan</TableRowColumn>
-                    <TableRowColumn>Unemployed</TableRowColumn>
-                    <TableRowColumn>1</TableRowColumn>
-                  </TableRow>
+                  {this.getAssetRows()}
                 </TableBody>
               </Table>
             </CardText>
