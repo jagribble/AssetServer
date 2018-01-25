@@ -56,8 +56,8 @@ router.get('/change', (req, res) => {
 /*
 Delete routes
 */
-router.delete('/delete/:assetID',(req,res)=>{
-  client.query(`DELETE FROM Asset WHERE assetID=${req.params.assetID}`).then((result)=>{
+router.delete('/delete/:assetID', (req, res) => {
+  client.query(`DELETE FROM Asset WHERE assetID=${req.params.assetID}`).then((result) => {
     res.send(result);
   });
 });

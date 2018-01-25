@@ -37,16 +37,16 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.use('/', jwtCheck, index);
+app.use('/api', jwtCheck, index);
 
 app.use('/check', jwtCheck, (req, res, next) => {
   res.send('successful');
   next();
 });
-// app.get('/', (req, res) => {
-//   // initialise empty array for results of db query
-//   res.send('hello');
-// });
+app.get('/', (req, res) => {
+  // initialise empty array for results of db query
+  res.render('index');
+});
 //
 //
 // app.get('/test', (req, res) => {
