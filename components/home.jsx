@@ -11,6 +11,7 @@ import {
   TableRowColumn,
 } from 'material-ui/Table';
 import fetch from 'node-fetch';
+import $ from 'jquery';
 // import Auth from './Auth/Auth.js';
 
 
@@ -29,14 +30,42 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-
+      data: {},
+      token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlJrSTVNREkyUVRZelFVUXhNamN6UlRjd05FUXdRa05FTUVFM1JVWTRNelJFUTBReFFUVkNOdyJ9.eyJpc3MiOiJodHRwczovL2FwcDc5NTUzODcwLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1YTUzZmQxN2NmYjMxYTI3ODkzNDUyZGYiLCJhdWQiOlsiaHR0cHM6Ly9hc3NldGFyLXN0Zy5oZXJva3VhcHAuY29tLyIsImh0dHBzOi8vYXBwNzk1NTM4NzAuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTUxNjgyNDQ4MiwiZXhwIjoxNTE2OTEwODgyLCJhenAiOiIyQXFmcm40azI0VkV2d0tjdTBXbVJsTWdqNlNrSVU2WiIsInNjb3BlIjoib3BlbmlkIHByb2ZpbGUgcmVhZDphc3NldHMiLCJndHkiOiJwYXNzd29yZCJ9.UT-ziUChuvWE2ezktTNDc-Fc5k2FQtOSuuEbufVUxLeq189Gvck5XNH4Vma-Qa6jF4cUKCu0nVjU4mLueilKAey3WT3DU_yT7bhkBHhc3uuDlng2PCySKWbBroR0X0c9rWhJALI9N4XipPhoXcxxH2D_GO6QWzkpdKDRrbATdVo-GmVCJKuCHuYgUtcX4VvxKFLgiv6okYL9geRvKvK6NAL3m1XQQ4K9As2wAjlE0lQKEVj2IF0ancw6r3QXzju7PvJncjN9uRN-BODOC9zbcW3qy3GCwsyHg_gqdodfLDSnuxIVHKQ3VpTpYm42e77TmTVErQIUZPAK95uXwCjRPg',
     };
     this.getData = this.getData.bind(this);
     // const auth = new Auth();
     // auth.login();
   }
 
+  componentDidMount() {
+    this.getData();
+  }
+
   getData() {
+    // $.ajax({
+    //   url: 'https://assetar-stg.herokuapp.com/api/assets',
+    //   header: {
+    //     Authorization: `Bearer ${this.state.token}`,
+    //     contentType: 'application/json',
+    //     AccessControlAllowHeaders: 'Content-Type',
+    //   },
+    //   success(result) {
+    //     console.log('result');
+    //     this.setState({ data: result.json() });
+    //   },
+    // });
+    // // fetch('https://assetar-stg.herokuapp.com/api/assets', {
+    // //   header: {
+    // //     Authorization: `Bearer ${this.state.token}`,
+    // //   },
+    // // }).then((result) => {
+    // //   console.log('result');
+    // //   this.setState({ data: result.json() });
+    // // }).catch((error) => {
+    // //   console.error(error);
+    // //   this.setState({ data: error });
+    // // });
     fetch('https://app79553870.auth0.com/oauth/token', {
       method: 'POST',
       header: { contentType: 'application/json', AccessControlAllowOrigin: '*' },
@@ -48,23 +77,24 @@ export default class Home extends Component {
       },
     }).then((result) => {
       console.log(result);
-    //  this.setState({ data: result });
+      this.setState({ data: result.json() });
     });
   }
 
 
   render() {
-    this.getData();
     return (
       <MuiThemeProvider>
-        <div>
+        <div style={{ width: '100vw' }}>
           <AppBar
+            style={{ width: '100vw' }}
             title="AssetAR"
             iconClassNameRight="muidocs-icon-navigation-expand-more"
           />
           <Card style={{ margin: '10px' }}>
             <CardText>
               <h3>AssetAR Assets</h3>
+              <p>{JSON.stringify(this.state.data)}</p>
               <Table>
                 <TableHeader
                   displaySelectAll={false}
