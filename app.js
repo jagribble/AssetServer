@@ -37,17 +37,22 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
 
+if (process.env.AUTH === 'true') {
+  app.use('/api', jwtCheck, index);
 
-app.use('/api', jwtCheck, index);
+  app.use('/check', jwtCheck, (req, res, next) => {
+    res.send('successful');
+    next();
+  });
+} else {
+  app.use('/api', index);
+}
 
-app.use('/check', jwtCheck, (req, res, next) => {
-  res.send('successful');
-  next();
-});
 app.get('/', (req, res) => {
   // initialise empty array for results of db query
   res.render('index');

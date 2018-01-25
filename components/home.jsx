@@ -43,42 +43,43 @@ export default class Home extends Component {
   }
 
   getData() {
-    // $.ajax({
-    //   url: 'https://assetar-stg.herokuapp.com/api/assets',
+    console.log(`Bearer ${this.state.token}`);
+    $.ajax({
+      url: 'https://assetar-stg.herokuapp.com/api/assets',
+      header: {
+        Authorization: `Bearer ${this.state.token}`,
+        contentType: 'application/json',
+        AccessControlAllowHeaders: 'Content-Type',
+      },
+      success(result) {
+        console.log('result');
+        this.setState({ data: result.json() });
+      },
+    });
+    // fetch('https://assetar-stg.herokuapp.com/api/assets', {
     //   header: {
     //     Authorization: `Bearer ${this.state.token}`,
-    //     contentType: 'application/json',
-    //     AccessControlAllowHeaders: 'Content-Type',
     //   },
-    //   success(result) {
-    //     console.log('result');
-    //     this.setState({ data: result.json() });
-    //   },
+    // }).then((result) => {
+    //   console.log('result');
+    //   this.setState({ data: result.json() });
+    // }).catch((error) => {
+    //   console.error(error);
+    //   this.setState({ data: error });
     // });
-    // // fetch('https://assetar-stg.herokuapp.com/api/assets', {
-    // //   header: {
-    // //     Authorization: `Bearer ${this.state.token}`,
-    // //   },
-    // // }).then((result) => {
-    // //   console.log('result');
-    // //   this.setState({ data: result.json() });
-    // // }).catch((error) => {
-    // //   console.error(error);
-    // //   this.setState({ data: error });
-    // // });
-    fetch('https://app79553870.auth0.com/oauth/token', {
-      method: 'POST',
-      header: { contentType: 'application/json', AccessControlAllowOrigin: '*' },
-      body: {
-        grant_type: 'client_credentials',
-        client_id: 'zpnwpy9WANpL0KPI2ERHYWrOWXbEx0pK',
-        client_secret: '_xKtDH2P4ioe1dl0Hf0vbBf1nRE8utR740KZyyJEjSvh9L1zWGU5XO7WsU7vk5sV',
-        audience: 'https://assetar-stg.herokuapp.com/',
-      },
-    }).then((result) => {
-      console.log(result);
-      this.setState({ data: result.json() });
-    });
+    // fetch('https://app79553870.auth0.com/oauth/token', {
+    //   method: 'POST',
+    //   header: { contentType: 'application/json', AccessControlAllowOrigin: '*' },
+    //   body: {
+    //     grant_type: 'client_credentials',
+    //     client_id: 'zpnwpy9WANpL0KPI2ERHYWrOWXbEx0pK',
+    //     client_secret: '_xKtDH2P4ioe1dl0Hf0vbBf1nRE8utR740KZyyJEjSvh9L1zWGU5XO7WsU7vk5sV',
+    //     audience: 'https://assetar-stg.herokuapp.com/',
+    //   },
+    // }).then((result) => {
+    //   console.log(result);
+    //   this.setState({ data: result.json() });
+    // });
   }
 
 
