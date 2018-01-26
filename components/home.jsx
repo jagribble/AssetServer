@@ -1,30 +1,52 @@
 import React, { Component } from 'react';
-import AppBar from 'material-ui/AppBar';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { Card, CardText } from 'material-ui/Card';
-import { TableRow, TableRowColumn } from 'material-ui/Table';
+import { Tabs, Tab } from 'material-ui/Tabs';
 import 'whatwg-fetch';
 // import $ from 'jquery';
 
 import AssetTable from './AssetTable';
+import Loading from './Loading';
 // import Auth from './Auth/Auth.js';
+const styleLoading = {
+  background: '#e9e9e9',
+  display: 'inherit',
+  position: 'absolute',
+  top: 0,
+  right: 0,
+  bottom: 0,
+  left: 0,
+  opacity: 0.5,
+  zIndex: 100000,
+};
+
+const styleNoLoading =
+  {
+    background: '#e9e9e9',
+    display: 'none',
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    opacity: 0.5,
+    zIndex: 100000,
+  };
+
+const styleLoadingIcon = {
+  marginLeft: '47%', marginTop: '-15vh', zIndex: 100000, display: 'inherit',
+};
+
+const styleNoLoadingIcon = {
+  display: 'none',
+};
+// { display: 'none' };
 
 
-// const Home = () => {
-//   return (
-//     <div>
-//       <AppBar
-//         title="AssetAR"
-//         iconClassNameRight="muidocs-icon-navigation-expand-more"
-//       />
-//     </div>);
-// };
-//
-// export default Home;
 export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: false,
       data: [],
       token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlJrSTVNREkyUVRZelFVUXhNamN6UlRjd05FUXdRa05FTUVFM1JVWTRNelJFUTBReFFUVkNOdyJ9.eyJpc3MiOiJodHRwczovL2FwcDc5NTUzODcwLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1YTUzZmQxN2NmYjMxYTI3ODkzNDUyZGYiLCJhdWQiOlsiaHR0cHM6Ly9hc3NldGFyLXN0Zy5oZXJva3VhcHAuY29tLyIsImh0dHBzOi8vYXBwNzk1NTM4NzAuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTUxNjgyNDQ4MiwiZXhwIjoxNTE2OTEwODgyLCJhenAiOiIyQXFmcm40azI0VkV2d0tjdTBXbVJsTWdqNlNrSVU2WiIsInNjb3BlIjoib3BlbmlkIHByb2ZpbGUgcmVhZDphc3NldHMiLCJndHkiOiJwYXNzd29yZCJ9.UT-ziUChuvWE2ezktTNDc-Fc5k2FQtOSuuEbufVUxLeq189Gvck5XNH4Vma-Qa6jF4cUKCu0nVjU4mLueilKAey3WT3DU_yT7bhkBHhc3uuDlng2PCySKWbBroR0X0c9rWhJALI9N4XipPhoXcxxH2D_GO6QWzkpdKDRrbATdVo-GmVCJKuCHuYgUtcX4VvxKFLgiv6okYL9geRvKvK6NAL3m1XQQ4K9As2wAjlE0lQKEVj2IF0ancw6r3QXzju7PvJncjN9uRN-BODOC9zbcW3qy3GCwsyHg_gqdodfLDSnuxIVHKQ3VpTpYm42e77TmTVErQIUZPAK95uXwCjRPg',
     };
@@ -37,19 +59,6 @@ export default class Home extends Component {
     this.getData();
   }
 
-  getAssetRows() {
-    return this.state.data.map((row) => {
-      // const jsonRow = JSON.parse(row);
-      return (
-        <TableRow key={row.assetid}>
-          <TableRowColumn>{row.assetid}</TableRowColumn>
-          <TableRowColumn>{row.assetname}</TableRowColumn>
-          <TableRowColumn>{row.assetx}</TableRowColumn>
-          <TableRowColumn>{row.assety}</TableRowColumn>
-        </TableRow>
-      );
-    });
-  }
 
   getData() {
     console.log(`Bearer ${this.state.token}`);
@@ -65,6 +74,9 @@ export default class Home extends Component {
     //     this.setState({ data: result.rows });
     //   },
     // });
+    this.setState({
+      loading: true,
+    });
     fetch('http://assetar-stg.herokuapp.com/api/assets', {
       header: {
         Authorization: `Bearer ${this.state.token}`,
@@ -74,9 +86,15 @@ export default class Home extends Component {
       return result.json();
     }).catch((error) => {
       console.error(error);
-      this.setState({ data: error });
+      this.setState({
+        data: error,
+        loading: false,
+      });
     }).then((data) => {
-      this.setState({ data: data.rows });
+      this.setState({
+        data: data.rows,
+        loading: false,
+      });
     });
     // fetch('https://app79553870.auth0.com/oauth/token', {
     //   method: 'POST',
@@ -95,21 +113,27 @@ export default class Home extends Component {
 
 
   render() {
+    let loading = null;
+    if (this.state.loading) { loading = <Loading />; } else {
+      loading = null;
+    }
     return (
-      <MuiThemeProvider>
-        <div style={{ width: '100vw' }}>
-          <AppBar
-            style={{ width: '100vw' }}
-            title="AssetAR"
-            iconClassNameRight="muidocs-icon-navigation-expand-more"
-          />
-          <Card style={{ margin: '10px' }}>
-            <CardText>
-              <h3>AssetAR Assets</h3>
-              <AssetTable rows={this.getAssetRows()} />
-            </CardText>
-          </Card>
-        </div>
-      </MuiThemeProvider>);
+      <div >
+
+        <Card style={{ margin: '10px' }}>
+          <CardText>
+            <Tabs>
+              <Tab label="Table" >
+                <h3>AssetAR Assets</h3>
+                <AssetTable data={this.state.data} />
+              </Tab>
+              <Tab label="Charts" />
+            </Tabs>
+          </CardText>
+        </Card>
+        {loading}
+
+      </div>
+    );
   }
 }

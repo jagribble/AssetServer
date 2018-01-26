@@ -53,8 +53,7 @@ if (process.env.AUTH === 'true') {
   app.use('/api', index);
 }
 
-app.get('/', (req, res) => {
-  // initialise empty array for results of db query
+app.use('/', (req, res) => {
   res.render('index');
 });
 //

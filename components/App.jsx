@@ -1,35 +1,47 @@
 // src/routes.js
 
 import React from 'react';
-import { Route, Router } from 'react-router-dom';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import AppBar from 'material-ui/AppBar';
+import { Route, BrowserRouter } from 'react-router-dom';
 import Home from './home';
-import Callback from './Auth/callback';
-import Auth from './Auth/Auth';
-import history from './Auth/history';
+import Data from './Data';
+// import Callback from './Auth/callback';
+// import Auth from './Auth/Auth';
+// import history from './Auth/history';
 
-const auth = new Auth();
+// const auth = new Auth();
 
-const handleAuthentication = (nextState, replace) => {
-  if (/access_token|id_token|error/.test(nextState.location.hash)) {
-    auth.handleAuthentication();
-  }
-};
+// const handleAuthentication = (nextState, replace) => {
+//   if (/access_token|id_token|error/.test(nextState.location.hash)) {
+//     auth.handleAuthentication();
+//   }
+// };
 
 const makeMainRoutes = () => {
   return (
-    <Router history={history} component={Home}>
+    <MuiThemeProvider>
       <div>
-        <Route path="/" render={(props) => { return <Home auth={auth} {...props} />; }} />
-        <Route path="/home" render={(props) => { return <Home auth={auth} {...props} />; }} />
-        <Route
+        <AppBar
+
+          title="AssetAR"
+          iconClassNameRight="muidocs-icon-navigation-expand-more"
+        />
+        <BrowserRouter >
+          <div>
+            <Route exact path="/" component={Home} />
+            <Route path="/data" component={Data} />
+            {/* <Route
           path="/callback"
           render={(props) => {
           handleAuthentication(props);
           return <Callback {...props} />;
         }}
-        />
+        /> */}
+          </div>
+        </BrowserRouter>
       </div>
-    </Router>
+    </MuiThemeProvider>
   );
 };
 
