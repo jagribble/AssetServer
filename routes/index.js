@@ -160,8 +160,8 @@ router.get('/orginization', (req, res) => {
 });
 
 // SELECT all data types
-router.get('/data', (req, res) => {
-  client.query('SELECT * FROM Data').then((result) => {
+router.get('/dataType', (req, res) => {
+  client.query('SELECT * FROM DataType').then((result) => {
     res.send(result);
   });
 });
