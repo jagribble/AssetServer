@@ -43,49 +43,6 @@ export default class Data extends Component {
     this.getDataTypes();
   }
 
-  submit() {
-    this.setState({
-      loading: true,
-    });
-    const now = new Date();
-    const year = `${now.getFullYear()}`;
-    let month = `${now.getMonth() + 1}`; if (month.length == 1) { month = `0${month}`; }
-    let day = `${now.getDate()}`; if (day.length == 1) { day = `0${day}`; }
-    let hour = `${now.getHours()}`; if (hour.length == 1) { hour = `0${hour}`; }
-    let minute = `${now.getMinutes()}`; if (minute.length == 1) { minute = `0${minute}`; }
-    let second = `${now.getSeconds()}`; if (second.length == 1) { second = `0${second}`; }
-    const data = {
-      data: `${this.state.value}`,
-      time: `${year}-${month}-${day} ${hour}:${minute}:${second}`,
-    };
-    console.log(JSON.stringify(data));
-
-    fetch(`/insert/asset/${this.state.assetValue}/datapoint/datatype/${this.state.dataTypeValue}`, {
-      method: 'post',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    }).then((result) => {
-      return result.json();
-    }).catch((error) => {
-      console.error(error);
-      this.setState({
-        loading: false,
-        open: true,
-        modalTitle: 'Error',
-        message: 'DataPoint unsuccessfull!',
-      });
-    }).then((res) => {
-      console.log(res);
-      this.setState({
-        loading: false,
-        open: true,
-        modalTitle: 'Success',
-        message: 'DataPoint successfully made!',
-        dataTypeName: '',
-        dataTypeUnit: '',
-      });
-    });
-  }
 
   getAssets() {
     fetch('/api/assets').then((result) => {
@@ -124,6 +81,49 @@ export default class Data extends Component {
       this.setState({
         loading: false,
         dataTypes: res.rows,
+      });
+    });
+  }
+  submit() {
+    this.setState({
+      loading: true,
+    });
+    const now = new Date();
+    const year = `${now.getFullYear()}`;
+    let month = `${now.getMonth() + 1}`; if (month.length === 1) { month = `0${month}`; }
+    let day = `${now.getDate()}`; if (day.length === 1) { day = `0${day}`; }
+    let hour = `${now.getHours()}`; if (hour.length === 1) { hour = `0${hour}`; }
+    let minute = `${now.getMinutes()}`; if (minute.length === 1) { minute = `0${minute}`; }
+    let second = `${now.getSeconds()}`; if (second.length === 1) { second = `0${second}`; }
+    const data = {
+      data: `${this.state.value}`,
+      time: `${year}-${month}-${day} ${hour}:${minute}:${second}`,
+    };
+    console.log(JSON.stringify(data));
+
+    fetch(`/api/insert/asset/${this.state.assetValue}/datapoint/datatype/${this.state.dataTypeValue}`, {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    }).then((result) => {
+      return result.json();
+    }).catch((error) => {
+      console.error(error);
+      this.setState({
+        loading: false,
+        open: true,
+        modalTitle: 'Error',
+        message: 'DataPoint unsuccessfull!',
+        assetValue: null,
+        dataTypeValue: null,
+      });
+    }).then((res) => {
+      console.log(res);
+      this.setState({
+        loading: false,
+        open: true,
+        modalTitle: 'Success',
+        message: 'DataPoint successfully made!',
       });
     });
   }
@@ -178,12 +178,12 @@ export default class Data extends Component {
           <CardText>
             <h2>Make a data type</h2>
         Asset:
-            <DropDownMenu maxHeight={300} name="assets" value={this.state.assetValue} onChange={this.handleChange}>
+            <DropDownMenu maxHeight={300} style={{ width: 200 }} name="assets" value={this.state.assetValue} onChange={this.handleChange}>
               {this.renderAssets()}
             </DropDownMenu>
             <br />
         Data Type:
-            <DropDownMenu maxHeight={300} name="assets" value={this.state.dataTypeValue} onChange={this.handleChangeDataType}>
+            <DropDownMenu maxHeight={300} style={{ width: 200 }} name="assets" value={this.state.dataTypeValue} onChange={this.handleChangeDataType}>
               {this.renderDataTypes()}
             </DropDownMenu>
             <br />

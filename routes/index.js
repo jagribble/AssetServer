@@ -103,8 +103,7 @@ router.post('/insert/datatype', (req, res) => {
 // INSERT a datapoint for an asset
 router.post('/insert/asset/:assetID/datapoint/datatype/:dataTypeID', (req, res) => {
   console.log(req.body);
-  console.log('asd');
-  client.query(`INSERT INTO DataPoint (timeStamp, data,assetID,dataTypeID) VALUES (${req.body.time},${req.body.data},${req.params.assetID},${req.params.dataTypeID})`).then((result) => {
+  client.query(`INSERT INTO DataPoint (timeStamp, data,assetID,dataTypeID) VALUES ('${req.body.time}','${req.body.data}',${req.params.assetID},${req.params.dataTypeID})`).then((result) => {
     res.send(result);
   });
 });
