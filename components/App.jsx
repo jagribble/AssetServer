@@ -6,7 +6,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import { Route, BrowserRouter } from 'react-router-dom';
 import Home from './home';
-import Data from './Data';
+import DataWizard from './DataWizard';
 // import Callback from './Auth/callback';
 // import Auth from './Auth/Auth';
 // import history from './Auth/history';
@@ -32,7 +32,7 @@ const makeMainRoutes = () => {
         <BrowserRouter >
           <div>
             <Route exact path="/" component={Home} />
-            <Route path="/data" component={Data} />
+            <Route path="/data" component={DataWizard} />
             {/* <Route
           path="/callback"
           render={(props) => {

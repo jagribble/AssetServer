@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 import { Card, CardText } from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import 'whatwg-fetch';
@@ -14,9 +16,12 @@ export default class DataType extends Component {
       dataTypeName: '',
       dataTypeUnit: '',
       token: '',
+      open: false,
+      message: '',
+      modalTitle: '',
     };
     this.submit = this.submit.bind(this);
-    this.test = this.test.bind(this);
+    this.handleClose = this.handleClose.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -29,24 +34,7 @@ export default class DataType extends Component {
       unit: `${this.state.dataTypeUnit}`,
     };
     console.log(JSON.stringify(data));
-    // $.ajax({
-    //   url: '/api/insert/datatype',
-    //   method: 'POST',
-    //   header: {
-    //     Authorization: `Bearer ${this.state.token}`,
-    //     ContentType: 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     name: 'test',
-    //     unit: 'test',
-    //   }),
-    //   success(result) {
-    //     console.log(result);
-    //     this.setState({
-    //       loading: false,
-    //     });
-    //   },
-    // });
+
     fetch('/api/insert/dataType', {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
@@ -55,32 +43,21 @@ export default class DataType extends Component {
       console.log(result);
       this.setState({
         loading: false,
+        open: true,
+        modalTitle: 'Success',
+        message: 'DataType successfully made!',
+        dataTypeName: '',
+        dataTypeUnit: '',
       });
     }).catch((error) => {
       console.error(error);
       this.setState({
         loading: false,
+        open: true,
+        modalTitle: 'Error',
+        message: 'DataType unsuccessfull!',
       });
     });
-    // fetch('/api/insert/dataType', {
-    //   method: 'post',
-    //   body: JSON.stringify(data),
-    //   header: {
-    //     Authorization: `Bearer ${this.state.token}`,
-    //     'Content-Type': 'application/json',
-    //   },
-    //
-    // }).then((result) => {
-    //   console.log(result);
-    //   this.setState({
-    //     loading: false,
-    //   });
-    // }).catch((error) => {
-    //   console.error(error);
-    //   this.setState({
-    //     loading: false,
-    //   });
-    // });
   }
 
   handleChange(event) {
@@ -96,8 +73,8 @@ export default class DataType extends Component {
     }
   }
 
-  test() {
-    console.log(this.state.dataTypeName);
+  handleClose() {
+    this.setState({ open: false });
   }
 
   render() {
@@ -111,7 +88,12 @@ export default class DataType extends Component {
         <Card>
           <CardText>
             <h2>Make a data type</h2>
-        Name of data Type: <TextField id="name" name="name" onChange={this.handleChange} value={this.state.dataTypeName} />
+        Name of data Type: <TextField
+          id="name"
+          name="name"
+          onChange={this.handleChange}
+          value={this.state.dataTypeName}
+        />
             <br />
         Unit of data Type: <TextField id="unit" name="unit" onChange={this.handleChange} value={this.state.dataTypeUnit} />
             <br />
@@ -120,6 +102,19 @@ export default class DataType extends Component {
           </CardText>
         </Card>
         {loading}
+        <Dialog
+          title={this.state.modalTitle}
+          modal
+          actions={<FlatButton
+            label="Ok"
+            primary
+            onClick={this.handleClose}
+          />}
+          open={this.state.open}
+          onRequestClose={this.handleClose}
+        >
+          {this.state.message}
+        </Dialog>
       </div>
     );
   }
