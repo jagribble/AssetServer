@@ -3,12 +3,13 @@ import { Card, CardText } from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import { Tabs, Tab } from 'material-ui/Tabs';
 
+import DataType from './DataType';
+
 export default class Data extends Component {
   constructor(props) {
     super(props);
     this.state = {
       dataValue: '',
-      dataType: '',
     };
   }
   render() {
@@ -18,16 +19,12 @@ export default class Data extends Component {
           <Tab label="Add data" >
             <Card >
               <CardText>
-              Data Value: <TextField value={this.state.dataValue} /><br />
+              Data Value: <TextField id="dataValue" name="dataValue" value={this.state.dataValue} /><br />
               </CardText>
             </Card>
           </Tab>
           <Tab label="Add data type">
-            <Card >
-              <CardText>
-              Data Type: <TextField value={this.state.dataType} /><br />
-              </CardText>
-            </Card>
+            <DataType />
           </Tab>
         </Tabs>
 

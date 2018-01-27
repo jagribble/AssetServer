@@ -1,6 +1,7 @@
 // src/routes.js
 
 import React from 'react';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
 import { Route, BrowserRouter } from 'react-router-dom';
@@ -19,6 +20,7 @@ import Data from './Data';
 // };
 
 const makeMainRoutes = () => {
+  injectTapEventPlugin();
   return (
     <MuiThemeProvider>
       <div>

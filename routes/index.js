@@ -63,7 +63,7 @@ router.delete('/delete/:assetID', (req, res) => {
 });
 
 router.delete('/delete/dataType/:dataTypeID', (req, res) => {
-  client.query(`DELETE FROM DataType WHERE assetID=${req.params.dataTypeID}`).then((result) => {
+  client.query(`DELETE FROM DataType WHERE dataTypeID=${req.params.dataTypeID}`).then((result) => {
     res.send(result);
   });
 });
@@ -92,8 +92,9 @@ router.post('/insert/asset', (req, res) => {
 });
 
 // INSERT a data type refering to an asset
-router.post('/intert/datatype', (req, res) => {
-  client.query(`INSERT INTO DataType (dataName, dataUnit) VALUES ('${req.body.name}','${req.body.unit}'`).then((result) => {
+router.post('/insert/datatype', (req, res) => {
+  console.log(req.body);
+  client.query(`INSERT INTO DataType (dataName, dataUnit) VALUES ('${req.body.name}','${req.body.unit}')`).then((result) => {
     res.send(result);
   });
 });
