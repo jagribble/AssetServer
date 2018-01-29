@@ -135,6 +135,11 @@ router.get('/:orginization/asset/:id', (req, res) => {
   });
 });
 
+router.get('/asset/:id/datapoints', (req, res) => {
+  client.query(`SELECT * FROM DataPoint WHERE assetID=${req.params.id}`).then((result) => {
+    res.send(result);
+  });
+});
 // SELECT ALL assets
 router.get('/assets', (req, res) => {
   client.query('SELECT * FROM Asset')

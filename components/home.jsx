@@ -77,7 +77,7 @@ export default class Home extends Component {
     this.setState({
       loading: true,
     });
-    fetch('http://assetar-stg.herokuapp.com/api/assets', {
+    fetch('/api/assets', {
       header: {
         Authorization: `Bearer ${this.state.token}`,
       },
