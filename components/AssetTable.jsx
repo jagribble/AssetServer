@@ -6,13 +6,15 @@ import {
   TableHeaderColumn,
   TableRow, TableRowColumn,
 } from 'material-ui/Table';
+// import { Route } from 'react-router-dom';
 
-const getAssetRows = (data) => {
+const getAssetRows = (data, props) => {
   if (data.length > 0) {
     return data.map((row) => {
       // const jsonRow = JSON.parse(row);
+      console.log(props);
       return (
-        <TableRow key={row.assetid}>
+        <TableRow onTouchTap={() => { props.history.push(`/asset/${row.assetid}`); }} key={row.assetid}>
           <TableRowColumn>{row.assetid}</TableRowColumn>
           <TableRowColumn>{row.assetname}</TableRowColumn>
           <TableRowColumn>{row.assetx}</TableRowColumn>
@@ -46,7 +48,7 @@ const AssetTable = (props) => {
       <TableBody
         displayRowCheckbox={false}
       >
-        {getAssetRows(props.data)}
+        {getAssetRows(props.data, props)}
       </TableBody>
     </Table>
   );

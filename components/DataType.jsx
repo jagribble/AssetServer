@@ -4,6 +4,9 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import { Card, CardText } from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
+import Row from 'muicss/lib/react/row';
+import Col from 'muicss/lib/react/col';
+import Container from 'muicss/lib/react/container';
 import 'whatwg-fetch';
 
 import Loading from './Loading';
@@ -84,18 +87,38 @@ export default class DataType extends Component {
     }
     // onClick={this.submit()}
     return (
-      <div>
+      <Container fluid>
         <Card>
           <CardText>
             <h2>Make a data type</h2>
-        Name of data Type: <TextField
-          id="name"
-          name="name"
-          onChange={this.handleChange}
-          value={this.state.dataTypeName}
-        />
-            <br />
-        Unit of data Type: <TextField id="unit" name="unit" onChange={this.handleChange} value={this.state.dataTypeUnit} />
+
+            <Row>
+              <Col xs="12" md="8">
+        Name of data Type:
+              </Col>
+              <Col xs="12" md="8">
+                <TextField
+                  id="name"
+                  name="name"
+                  onChange={this.handleChange}
+                  value={this.state.dataTypeName}
+                />
+              </Col>
+            </Row>
+
+            <Row>
+              <Col xs="12" md="8">
+        Unit of data Type:
+              </Col>
+              <Col xs="12" md="8">
+                <TextField
+                  id="unit"
+                  name="unit"
+                  onChange={this.handleChange}
+                  value={this.state.dataTypeUnit}
+                />
+              </Col>
+            </Row>
             <br />
             <RaisedButton label="Submit" primary onTouchTap={this.submit} />
 
@@ -115,7 +138,7 @@ export default class DataType extends Component {
         >
           {this.state.message}
         </Dialog>
-      </div>
+      </Container>
     );
   }
 }

@@ -19,7 +19,6 @@ export default class Data extends Component {
       assets: [],
       assetValue: null,
       dataTypeValue: null,
-      data: '',
       token: '',
       value: '',
       open: false,
@@ -151,7 +150,13 @@ export default class Data extends Component {
   renderDataTypes() {
     if (this.state.dataTypes.length > 0) {
       return this.state.dataTypes.map((type) => {
-        return (<MenuItem key={type.datatypeid} name="assets" value={type.datatypeid} primaryText={type.dataname} />);
+        return (
+          <MenuItem
+            key={type.datatypeid}
+            name="assets"
+            value={type.datatypeid}
+            primaryText={type.dataname}
+          />);
       });
     }
     return (<MenuItem value={null} primaryText="no assets" />);
@@ -160,7 +165,13 @@ export default class Data extends Component {
   renderAssets() {
     if (this.state.assets.length > 0) {
       return this.state.assets.map((asset) => {
-        return (<MenuItem key={asset.assetid} name="assets" value={asset.assetid} primaryText={asset.assetname} />);
+        return (
+          <MenuItem
+            key={asset.assetid}
+            name="assets"
+            value={asset.assetid}
+            primaryText={asset.assetname}
+          />);
       });
     }
     return (<MenuItem value={null} primaryText="no assets" />);
@@ -178,16 +189,33 @@ export default class Data extends Component {
           <CardText>
             <h2>Make a data type</h2>
         Asset:
-            <DropDownMenu maxHeight={300} style={{ width: 200 }} name="assets" value={this.state.assetValue} onChange={this.handleChange}>
+            <DropDownMenu
+              maxHeight={300}
+              style={{ width: 200 }}
+              name="assets"
+              value={this.state.assetValue}
+              onChange={this.handleChange}
+            >
               {this.renderAssets()}
             </DropDownMenu>
             <br />
         Data Type:
-            <DropDownMenu maxHeight={300} style={{ width: 200 }} name="assets" value={this.state.dataTypeValue} onChange={this.handleChangeDataType}>
+            <DropDownMenu
+              maxHeight={300}
+              style={{ width: 200 }}
+              name="assets"
+              value={this.state.dataTypeValue}
+              onChange={this.handleChangeDataType}
+            >
               {this.renderDataTypes()}
             </DropDownMenu>
             <br />
-            Value: <TextField name="dataValue" value={this.state.value} onChange={this.handleValueChange} /><br />
+            Value:
+            <TextField
+              name="dataValue"
+              value={this.state.value}
+              onChange={this.handleValueChange}
+            /><br />
             <RaisedButton label="Submit" primary onTouchTap={this.submit} />
 
           </CardText>

@@ -125,7 +125,7 @@ export default class Home extends Component {
             <Tabs>
               <Tab label="Table" >
                 <h3>AssetAR Assets</h3>
-                <AssetTable data={this.state.data} />
+                <AssetTable data={this.state.data} history={this.props.history} />
               </Tab>
               <Tab label="Charts" />
             </Tabs>
