@@ -129,7 +129,7 @@ router.get('/:orginization/assets', (req, res) => {
 });
 
 // SELECT asset where the assetID matches
-router.get('/:orginization/asset/:id', (req, res) => {
+router.get('/asset/:id', (req, res) => {
   client.query(`SELECT * FROM Asset WHERE assetID=${req.params.id}`).then((result) => {
     res.send(result);
   });
