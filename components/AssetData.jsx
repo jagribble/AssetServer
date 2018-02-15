@@ -9,20 +9,28 @@ import {
 import { Card, CardText } from 'material-ui/Card';
 import Line from 'react-chartjs-2';
 
+import GoogleMap from './GoogleMaps';
+
 export default class AssetData extends Component {
   constructor(props) {
     super(props);
     this.state = {
       assetData: [],
+      asset: {},
+      lat: 0,
+      lng: 0,
     };
 
     this.getAssetData = this.getAssetData.bind(this);
     this.getDataRows = this.getDataRows.bind(this);
+    this.getAsset = this.getAsset.bind(this);
+    this.getMap = this.getMap.bind(this);
   }
 
 
   componentDidMount() {
     this.getAssetData();
+    this.getAsset();
   }
 
   getDataRows() {
@@ -44,6 +52,14 @@ export default class AssetData extends Component {
       </TableRow>);
   }
 
+  getMap() {
+    if (Object.keys(this.state.asset).length <= 0) {
+      return (<div />);
+    }
+    const center = { lat: this.state.lat, lng: this.state.lng };
+    return (<GoogleMap center={center} zoom={14} />);
+  }
+
   getAssetData() {
     const path = this.props.history.location.pathname;
     const assetId = path.split('/');
@@ -60,12 +76,35 @@ export default class AssetData extends Component {
     });
   }
 
+  getAsset() {
+    const path = this.props.history.location.pathname;
+    const assetId = path.split('/');
+    fetch(`/api/asset/${assetId[assetId.length - 1]}/`).then((result) => {
+      console.log(result);
+      return result.json();
+    }).catch((error) => {
+      console.log(error);
+    }).then((res) => {
+      console.log(res.rows);
+      this.setState({
+        asset: res.rows[0],
+        lat: res.rows[0].assetx,
+        lng: res.rows[0].assety,
+      }, () => {
+        console.log(this.state.assetData);
+      });
+    });
+  }
+
   render() {
+    const center = { lat: this.state.lat, lng: this.state.lng };
     return (
       <div>
         <Card style={{ margin: '10px' }}>
           <CardText>
-            <Table>
+            <h1>{this.state.asset.assetname}</h1>
+            {this.getMap()}
+            <Table style={{ marginTop: '1px' }}>
               <TableHeader
                 displaySelectAll={false}
                 adjustForCheckbox={false}
@@ -79,7 +118,8 @@ export default class AssetData extends Component {
                 {this.getDataRows()}
               </TableBody>
             </Table>
-            <Line data={this.state.assetData} />
+            {/* <Line data={this.state.assetData} /> */}
+
           </CardText>
         </Card>
       </div>

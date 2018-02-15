@@ -22,7 +22,7 @@ const jwtCheck = jwt({
   algorithms: ['RS256'],
 });
 
-
+console.log(`Google API key = ${process.env.GOOGLE_API_KEY}`);
 console.log('running app.js');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
