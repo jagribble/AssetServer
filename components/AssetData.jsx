@@ -57,7 +57,7 @@ export default class AssetData extends Component {
       return (<div />);
     }
     const center = { lat: this.state.lat, lng: this.state.lng };
-    return (<GoogleMap center={center} zoom={14} />);
+    return (<GoogleMap center={center} assets={[this.state.asset]} zoom={14} />);
   }
 
   getAssetData() {

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Card, CardText } from 'material-ui/Card';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import 'whatwg-fetch';
+import GoogleMap from './GoogleMaps';
 // import $ from 'jquery';
 
 import AssetTable from './AssetTable';
@@ -125,6 +126,7 @@ export default class Home extends Component {
             <Tabs>
               <Tab label="Table" >
                 <h3>AssetAR Assets</h3>
+                <GoogleMap assets={this.state.data} zoom={14} />
                 <AssetTable data={this.state.data} history={this.props.history} />
               </Tab>
               <Tab label="Charts" />

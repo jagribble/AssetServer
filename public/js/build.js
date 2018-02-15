@@ -57485,6 +57485,10 @@ var _Tabs = __webpack_require__(157);
 
 __webpack_require__(107);
 
+var _GoogleMaps = __webpack_require__(659);
+
+var _GoogleMaps2 = _interopRequireDefault(_GoogleMaps);
+
 var _AssetTable = __webpack_require__(462);
 
 var _AssetTable2 = _interopRequireDefault(_AssetTable);
@@ -57644,6 +57648,7 @@ var Home = function (_Component) {
                   null,
                   'AssetAR Assets'
                 ),
+                _react2.default.createElement(_GoogleMaps2.default, { assets: this.state.data, zoom: 14 }),
                 _react2.default.createElement(_AssetTable2.default, { data: this.state.data, history: this.props.history })
               ),
               _react2.default.createElement(_Tabs.Tab, { label: 'Charts' })
@@ -69962,7 +69967,7 @@ var AssetData = function (_Component) {
         return _react2.default.createElement('div', null);
       }
       var center = { lat: this.state.lat, lng: this.state.lng };
-      return _react2.default.createElement(_GoogleMaps2.default, { center: center, zoom: 14 });
+      return _react2.default.createElement(_GoogleMaps2.default, { center: center, assets: [this.state.asset], zoom: 14 });
     }
   }, {
     key: 'getAssetData',
@@ -86869,8 +86874,6 @@ var MapContainer = exports.MapContainer = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (MapContainer.__proto__ || Object.getPrototypeOf(MapContainer)).call(this, props));
 
-    _initialiseProps.call(_this);
-
     _this.state = {
       showingInfoWindow: false,
       activeMarker: {},
@@ -86879,34 +86882,76 @@ var MapContainer = exports.MapContainer = function (_Component) {
 
     _this.onMarkerClick = _this.onMarkerClick.bind(_this);
     _this.onMapClicked = _this.onMapClicked.bind(_this);
+    _this.getMarkers = _this.getMarkers.bind(_this);
     return _this;
   }
 
   _createClass(MapContainer, [{
+    key: 'onMarkerClick',
+    value: function onMarkerClick(props, marker, e) {
+      this.setState({
+        selectedPlace: props,
+        activeMarker: marker,
+        showingInfoWindow: true
+      });
+    }
+  }, {
+    key: 'onMouseoverMarker',
+    value: function onMouseoverMarker(props, marker, e) {
+      this.setState({
+        selectedPlace: props,
+        activeMarker: marker,
+        showingInfoWindow: true
+      });
+    }
+  }, {
+    key: 'onMapClicked',
+    value: function onMapClicked(props) {
+      if (this.state.showingInfoWindow) {
+        this.setState({
+          showingInfoWindow: true,
+          activeMarker: null
+        });
+      }
+    }
+  }, {
+    key: 'getMarkers',
+    value: function getMarkers() {
+      var _this2 = this;
+
+      return this.props.assets.map(function (asset) {
+        return _react2.default.createElement(_googleMapsReact.Marker, {
+          key: asset.assetname,
+          onClick: _this2.onMarkerClick,
+          title: asset.assetname,
+          name: asset.assetname,
+          position: { lat: asset.assetx, lng: asset.assety }
+        });
+      });
+    }
+  }, {
     key: 'render',
     value: function render() {
-      //  this.props.google.maps.setCenter(this.props.center);
-      console.log(this.props);
       return _react2.default.createElement(
         _googleMapsReact.Map,
         {
           google: this.props.google,
           fullscreenControl: false,
           mapTypeControl: false,
-          containerStyle: { width: '55%', height: '250px', position: 'relative' },
+          containerStyle: { width: '100%', height: '250px', position: 'relative' },
           zoom: 14,
-          initialCenter: this.props.center
+          centerAroundCurrentLocation: !this.props.center,
+          initialCenter: this.props.center ? this.props.center : { lat: 0, lng: 0 }
 
         },
-        _react2.default.createElement(_googleMapsReact.Marker, {
-          onClick: this.onMarkerClick,
-          title: 'The marker`s title will appear as a tooltip.',
-          name: 'SOMA',
-          position: { lat: this.props.center.lat, lng: this.props.center.lng }
-        }),
+        this.getMarkers(),
         _react2.default.createElement(
           _googleMapsReact.InfoWindow,
-          { onClose: this.onInfoWindowClose },
+          {
+            marker: this.state.activeMarker,
+            visible: this.state.showingInfoWindow,
+            onClose: this.onInfoWindowClose
+          },
           _react2.default.createElement(
             'div',
             null,
@@ -86923,35 +86968,6 @@ var MapContainer = exports.MapContainer = function (_Component) {
 
   return MapContainer;
 }(_react.Component);
-
-var _initialiseProps = function _initialiseProps() {
-  var _this2 = this;
-
-  this.onMarkerClick = function (props, marker, e) {
-    _this2.setState({
-      selectedPlace: props,
-      activeMarker: marker,
-      showingInfoWindow: true
-    });
-  };
-
-  this.onMouseoverMarker = function (props, marker, e) {
-    _this2.setState({
-      selectedPlace: props,
-      activeMarker: marker,
-      showingInfoWindow: true
-    });
-  };
-
-  this.onMapClicked = function (props) {
-    if (_this2.state.showingInfoWindow) {
-      _this2.setState({
-        showingInfoWindow: true,
-        activeMarker: null
-      });
-    }
-  };
-};
 
 exports.default = (0, _googleMapsReact.GoogleApiWrapper)({
   apiKey: '' + "AIzaSyDo1PRngE38WeLhWjA1_pj8zqaOp4u97K4",
