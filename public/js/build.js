@@ -91406,32 +91406,34 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Charts = function Charts(props) {
   var data = {
-    labels: ['Red', 'Green', 'Yellow'],
+    labels: [],
     datasets: [{
       data: [],
       backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
       hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
     }]
   };
+  // For each asset go through and one to the relevant organization count
   var organizations = {};
-  // TODO: fix getting organization Name into the Pie chart
   props.assets.forEach(function (asset) {
-    // console.log('--------------');
-    // console.log(asset.assetname);
-    // console.log(organizations);
-    // console.log(organizations[`${asset.assetname}`]);
-    var organization = props.orgs.find(function (org) {
-      if (org.orginizationid === asset.orginizationid) {
-        return org;
-      }
-    }, function () {
-      console.log(organization.name);
+    if (props.orgs.length > 0) {
+      var organizationIndex = props.orgs.findIndex(function (org, i) {
+        if (org.orginizationid === asset.orginizationid) {
+          return org;
+        }
+      });
+      var organization = props.orgs[organizationIndex];
       if (!organizations[organization.name]) {
         organizations[organization.name] = { number: 1 };
       } else {
         organizations[organization.name].number += 1;
       }
-    });
+    }
+  });
+  // add the numbers to the chart data
+  Object.keys(organizations).forEach(function (org) {
+    data.labels.push(org);
+    data.datasets[0].data.push(organizations['' + org].number);
   });
 
   console.log(organizations);

@@ -9,11 +9,7 @@ import { Pie } from 'react-chartjs-2';
 
 const Charts = (props) => {
   const data = {
-    labels: [
-      'Red',
-      'Green',
-      'Yellow',
-    ],
+    labels: [],
     datasets: [{
       data: [],
       backgroundColor: [
@@ -28,25 +24,27 @@ const Charts = (props) => {
       ],
     }],
   };
+  // For each asset go through and one to the relevant organization count
   const organizations = {};
-  // TODO: fix getting organization Name into the Pie chart
   props.assets.forEach((asset) => {
-    // console.log('--------------');
-    // console.log(asset.assetname);
-    // console.log(organizations);
-    // console.log(organizations[`${asset.assetname}`]);
-    const organization = props.orgs.find((org) => {
-      if (org.orginizationid === asset.orginizationid) {
-        return org;
-      }
-    }, () => {
-      console.log(organization.name);
+    if (props.orgs.length > 0) {
+      const organizationIndex = props.orgs.findIndex((org, i) => {
+        if (org.orginizationid === asset.orginizationid) {
+          return org;
+        }
+      });
+      const organization = props.orgs[organizationIndex];
       if (!organizations[organization.name]) {
         organizations[organization.name] = { number: 1 };
       } else {
         organizations[organization.name].number += 1;
       }
-    });
+    }
+  });
+  // add the numbers to the chart data
+  Object.keys(organizations).forEach((org) => {
+    data.labels.push(org);
+    data.datasets[0].data.push(organizations[`${org}`].number);
   });
 
   console.log(organizations);
