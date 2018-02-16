@@ -57497,6 +57497,10 @@ var _Loading = __webpack_require__(109);
 
 var _Loading2 = _interopRequireDefault(_Loading);
 
+var _Charts = __webpack_require__(684);
+
+var _Charts2 = _interopRequireDefault(_Charts);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -57507,37 +57511,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 // import $ from 'jquery';
 
 // import Auth from './Auth/Auth.js';
-var styleLoading = {
-  background: '#e9e9e9',
-  display: 'inherit',
-  position: 'absolute',
-  top: 0,
-  right: 0,
-  bottom: 0,
-  left: 0,
-  opacity: 0.5,
-  zIndex: 100000
-};
 
-var styleNoLoading = {
-  background: '#e9e9e9',
-  display: 'none',
-  position: 'absolute',
-  top: 0,
-  right: 0,
-  bottom: 0,
-  left: 0,
-  opacity: 0.5,
-  zIndex: 100000
-};
-
-var styleLoadingIcon = {
-  marginLeft: '47%', marginTop: '-15vh', zIndex: 100000, display: 'inherit'
-};
-
-var styleNoLoadingIcon = {
-  display: 'none'
-};
 // { display: 'none' };
 
 
@@ -57550,11 +57524,14 @@ var Home = function (_Component) {
     var _this = _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this, props));
 
     _this.state = {
-      loading: false,
+      loadingAsset: false,
+      loadingOrg: false,
       data: [],
+      organizations: [],
       token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlJrSTVNREkyUVRZelFVUXhNamN6UlRjd05FUXdRa05FTUVFM1JVWTRNelJFUTBReFFUVkNOdyJ9.eyJpc3MiOiJodHRwczovL2FwcDc5NTUzODcwLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1YTUzZmQxN2NmYjMxYTI3ODkzNDUyZGYiLCJhdWQiOlsiaHR0cHM6Ly9hc3NldGFyLXN0Zy5oZXJva3VhcHAuY29tLyIsImh0dHBzOi8vYXBwNzk1NTM4NzAuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTUxNjgyNDQ4MiwiZXhwIjoxNTE2OTEwODgyLCJhenAiOiIyQXFmcm40azI0VkV2d0tjdTBXbVJsTWdqNlNrSVU2WiIsInNjb3BlIjoib3BlbmlkIHByb2ZpbGUgcmVhZDphc3NldHMiLCJndHkiOiJwYXNzd29yZCJ9.UT-ziUChuvWE2ezktTNDc-Fc5k2FQtOSuuEbufVUxLeq189Gvck5XNH4Vma-Qa6jF4cUKCu0nVjU4mLueilKAey3WT3DU_yT7bhkBHhc3uuDlng2PCySKWbBroR0X0c9rWhJALI9N4XipPhoXcxxH2D_GO6QWzkpdKDRrbATdVo-GmVCJKuCHuYgUtcX4VvxKFLgiv6okYL9geRvKvK6NAL3m1XQQ4K9As2wAjlE0lQKEVj2IF0ancw6r3QXzju7PvJncjN9uRN-BODOC9zbcW3qy3GCwsyHg_gqdodfLDSnuxIVHKQ3VpTpYm42e77TmTVErQIUZPAK95uXwCjRPg'
     };
     _this.getData = _this.getData.bind(_this);
+    _this.getOrganizations = _this.getOrganizations.bind(_this);
     // const auth = new Auth();
     // auth.login();
     return _this;
@@ -57564,6 +57541,7 @@ var Home = function (_Component) {
     key: 'componentDidMount',
     value: function componentDidMount() {
       this.getData();
+      this.getOrganizations();
     }
   }, {
     key: 'getData',
@@ -57571,20 +57549,8 @@ var Home = function (_Component) {
       var _this2 = this;
 
       console.log('Bearer ' + this.state.token);
-      // $.ajax({
-      //   url: '/api/assets',
-      //   header: {
-      //     Authorization: `Bearer ${this.state.token}`,
-      //     contentType: 'application/json',
-      //     AccessControlAllowHeaders: 'Content-Type',
-      //   },
-      //   success(result) {
-      //     console.log(result);
-      //     this.setState({ data: result.rows });
-      //   },
-      // });
       this.setState({
-        loading: true
+        loadingAsset: true
       });
       fetch('/api/assets', {
         header: {
@@ -57597,33 +57563,47 @@ var Home = function (_Component) {
         console.error(error);
         _this2.setState({
           data: error,
-          loading: false
+          loadingAsset: false
         });
       }).then(function (data) {
         _this2.setState({
           data: data.rows,
-          loading: false
+          loadingAsset: false
         });
       });
-      // fetch('https://app79553870.auth0.com/oauth/token', {
-      //   method: 'POST',
-      //   header: { contentType: 'application/json', AccessControlAllowOrigin: '*' },
-      //   body: {
-      //     grant_type: 'client_credentials',
-      //     client_id: 'zpnwpy9WANpL0KPI2ERHYWrOWXbEx0pK',
-      //     client_secret: '_xKtDH2P4ioe1dl0Hf0vbBf1nRE8utR740KZyyJEjSvh9L1zWGU5XO7WsU7vk5sV',
-      //     audience: 'https://assetar-stg.herokuapp.com/',
-      //   },
-      // }).then((result) => {
-      //   console.log(result);
-      //   this.setState({ data: result.json() });
-      // });
+    }
+  }, {
+    key: 'getOrganizations',
+    value: function getOrganizations() {
+      var _this3 = this;
+
+      this.setState({ loadingOrg: true });
+      fetch('/api/orginization', {
+        header: {
+          Authorization: 'Bearer ' + this.state.token
+        }
+      }).then(function (result) {
+        console.log('result');
+        return result.json();
+      }).catch(function (error) {
+        console.error(error);
+        _this3.setState({
+          data: error,
+          loadingOrg: false
+        });
+      }).then(function (data) {
+        console.log(data);
+        _this3.setState({
+          organizations: data.rows,
+          loadingOrg: false
+        });
+      });
     }
   }, {
     key: 'render',
     value: function render() {
       var loading = null;
-      if (this.state.loading) {
+      if (this.state.loadingAsset || this.state.loadingOrg) {
         loading = _react2.default.createElement(_Loading2.default, null);
       } else {
         loading = null;
@@ -57651,7 +57631,11 @@ var Home = function (_Component) {
                 _react2.default.createElement(_GoogleMaps2.default, { assets: this.state.data, zoom: 14 }),
                 _react2.default.createElement(_AssetTable2.default, { data: this.state.data, history: this.props.history })
               ),
-              _react2.default.createElement(_Tabs.Tab, { label: 'Charts' })
+              _react2.default.createElement(
+                _Tabs.Tab,
+                { label: 'Charts' },
+                _react2.default.createElement(_Charts2.default, { assets: this.state.data, orgs: this.state.organizations })
+              )
             )
           )
         ),
@@ -59793,7 +59777,7 @@ var getAssetRows = function getAssetRows(data, props) {
   if (data.length > 0) {
     return data.map(function (row) {
       // const jsonRow = JSON.parse(row);
-      console.log(props);
+      //  console.log(props);
       return _react2.default.createElement(
         _Table.TableRow,
         { onTouchTap: function onTouchTap() {
@@ -69886,8 +69870,6 @@ var _Card = __webpack_require__(52);
 
 var _reactChartjs = __webpack_require__(512);
 
-var _reactChartjs2 = _interopRequireDefault(_reactChartjs);
-
 var _GoogleMaps = __webpack_require__(659);
 
 var _GoogleMaps2 = _interopRequireDefault(_GoogleMaps);
@@ -69919,6 +69901,7 @@ var AssetData = function (_Component) {
     _this.getDataRows = _this.getDataRows.bind(_this);
     _this.getAsset = _this.getAsset.bind(_this);
     _this.getMap = _this.getMap.bind(_this);
+    _this.getGraphData = _this.getGraphData.bind(_this);
     return _this;
   }
 
@@ -70012,9 +69995,47 @@ var AssetData = function (_Component) {
       });
     }
   }, {
+    key: 'getGraphData',
+    value: function getGraphData() {
+      var graphData = {
+        labels: [],
+        datasets: [{
+          label: '' + this.state.asset.assetname,
+          fill: false,
+          lineTension: 0.1,
+          backgroundColor: 'rgba(75,192,192,0.4)',
+          borderColor: 'rgba(75,192,192,1)',
+          borderCapStyle: 'butt',
+          borderDash: [],
+          borderDashOffset: 0.0,
+          borderJoinStyle: 'miter',
+          pointBorderColor: 'rgba(75,192,192,1)',
+          pointBackgroundColor: '#fff',
+          pointBorderWidth: 1,
+          pointHoverRadius: 5,
+          pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+          pointHoverBorderColor: 'rgba(220,220,220,1)',
+          pointHoverBorderWidth: 2,
+          pointRadius: 3,
+          pointHitRadius: 10,
+          data: []
+        }]
+      };
+
+      this.state.assetData.forEach(function (assetData) {
+        var date = new Date(assetData.timestamp);
+        graphData.datasets[0].data.push(assetData.data);
+        graphData.labels.push(date.toGMTString());
+      }, function () {
+        return graphData;
+      });
+      return graphData;
+    }
+  }, {
     key: 'render',
     value: function render() {
-      var center = { lat: this.state.lat, lng: this.state.lng };
+      // const center = { lat: this.state.lat, lng: this.state.lng };
+      console.log(this.getGraphData());
       return _react2.default.createElement(
         'div',
         null,
@@ -70059,7 +70080,8 @@ var AssetData = function (_Component) {
                 { displayRowCheckbox: false },
                 this.getDataRows()
               )
-            )
+            ),
+            _react2.default.createElement(_reactChartjs.Line, { data: this.getGraphData })
           )
         )
       );
@@ -91344,6 +91366,79 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     };
   };
 });
+
+/***/ }),
+/* 673 */,
+/* 674 */,
+/* 675 */,
+/* 676 */,
+/* 677 */,
+/* 678 */,
+/* 679 */,
+/* 680 */,
+/* 681 */,
+/* 682 */,
+/* 683 */,
+/* 684 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactChartjs = __webpack_require__(512);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// export default class Charts extends Component {
+//   constructor(props){
+//     super(props)
+//   }
+//
+// }
+
+var Charts = function Charts(props) {
+  var data = {
+    labels: ['Red', 'Green', 'Yellow'],
+    datasets: [{
+      data: [],
+      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+      hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+    }]
+  };
+  var organizations = {};
+  // TODO: fix getting organization Name into the Pie chart
+  props.assets.forEach(function (asset) {
+    // console.log('--------------');
+    // console.log(asset.assetname);
+    // console.log(organizations);
+    // console.log(organizations[`${asset.assetname}`]);
+    var organization = props.orgs.find(function (org) {
+      if (org.orginizationid === asset.orginizationid) {
+        return org;
+      }
+    }, function () {
+      console.log(organization.name);
+      if (!organizations[organization.name]) {
+        organizations[organization.name] = { number: 1 };
+      } else {
+        organizations[organization.name].number += 1;
+      }
+    });
+  });
+
+  console.log(organizations);
+  return _react2.default.createElement(_reactChartjs.Pie, { data: data });
+};
+
+exports.default = Charts;
 
 /***/ })
 /******/ ]);
