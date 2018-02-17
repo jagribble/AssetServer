@@ -48,7 +48,11 @@ const Charts = (props) => {
   });
 
   console.log(organizations);
-  return (<Pie data={data} />);
+  return (
+    <div>
+      <h1>Number of Assets per Organization</h1>
+      <Pie data={data} />
+    </div>);
 };
 
 

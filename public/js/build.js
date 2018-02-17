@@ -91437,7 +91437,16 @@ var Charts = function Charts(props) {
   });
 
   console.log(organizations);
-  return _react2.default.createElement(_reactChartjs.Pie, { data: data });
+  return _react2.default.createElement(
+    'div',
+    null,
+    _react2.default.createElement(
+      'h1',
+      null,
+      'Number of Assets per Organization'
+    ),
+    _react2.default.createElement(_reactChartjs.Pie, { data: data })
+  );
 };
 
 exports.default = Charts;
