@@ -19,6 +19,7 @@ export default class Users extends Component {
     this.getAppUsers = this.getAppUsers.bind(this);
     this.getOrgs = this.getOrgs.bind(this);
     this.addUser = this.addUser.bind(this);
+    this.displayAppUsers = this.displayAppUsers.bind(this);
   }
 
   componentWillMount() {
@@ -85,14 +86,47 @@ export default class Users extends Component {
   getUsers() {
     // TODO: filter if they are already created in the AppUser table (still allow to modify org)
     return this.state.users.map((user) => {
-      return (
-        <User
-          key={user.user_id}
-          user={user}
+      const userExits = this.state.appUsers.findIndex((appUser) => {
+        if (appUser.userid === user.user_id) {
+          return appUser;
+        }
+        return null;
+      });
+      console.log(userExits);
+      if (userExits === -1) {
+        return (
+          <User
+            key={user.user_id}
+            user={user}
+            orgs={this.state.organization}
+            addUser={(userId, org) => { this.addUser(userId, org); }}
+          />);
+      }
+
+      return null;
+    });
+  }
+
+  displayAppUsers() {
+    if (this.state.users.length > 0) {
+      return this.state.appUsers.map((user) => {
+        const userExits = this.state.users.findIndex((authUser) => {
+          if (authUser.user_id === user.userid) {
+            return authUser;
+          }
+          return null;
+        });
+        console.log(user.organizationid);
+        return (<User
+          key={user.userid}
+          user={this.state.users[userExits]}
+          orgID={user.organizationid}
           orgs={this.state.organization}
           addUser={(userId, org) => { this.addUser(userId, org); }}
         />);
-    });
+      });
+    }
+    return null;
   }
 
   addUser(userId, org) {
@@ -124,6 +158,12 @@ export default class Users extends Component {
 
 
   render() {
-    return (<div>{this.getUsers()}</div>);
+    return (
+      <div>
+        <h1>Users with organization</h1>
+        {this.displayAppUsers()}
+        <h1>Users without organization</h1>
+        {this.getUsers()}
+      </div>);
   }
 }

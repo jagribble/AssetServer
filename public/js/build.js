@@ -91517,6 +91517,7 @@ var Users = function (_Component) {
     _this.getAppUsers = _this.getAppUsers.bind(_this);
     _this.getOrgs = _this.getOrgs.bind(_this);
     _this.addUser = _this.addUser.bind(_this);
+    _this.displayAppUsers = _this.displayAppUsers.bind(_this);
     return _this;
   }
 
@@ -91597,20 +91598,58 @@ var Users = function (_Component) {
 
       // TODO: filter if they are already created in the AppUser table (still allow to modify org)
       return this.state.users.map(function (user) {
-        return _react2.default.createElement(_User2.default, {
-          key: user.user_id,
-          user: user,
-          orgs: _this5.state.organization,
-          addUser: function addUser(userId, org) {
-            _this5.addUser(userId, org);
+        var userExits = _this5.state.appUsers.findIndex(function (appUser) {
+          if (appUser.userid === user.user_id) {
+            return appUser;
           }
+          return null;
         });
+        console.log(userExits);
+        if (userExits === -1) {
+          return _react2.default.createElement(_User2.default, {
+            key: user.user_id,
+            user: user,
+            orgs: _this5.state.organization,
+            addUser: function addUser(userId, org) {
+              _this5.addUser(userId, org);
+            }
+          });
+        }
+
+        return null;
       });
+    }
+  }, {
+    key: 'displayAppUsers',
+    value: function displayAppUsers() {
+      var _this6 = this;
+
+      if (this.state.users.length > 0) {
+        return this.state.appUsers.map(function (user) {
+          var userExits = _this6.state.users.findIndex(function (authUser) {
+            if (authUser.user_id === user.userid) {
+              return authUser;
+            }
+            return null;
+          });
+          console.log(user.organizationid);
+          return _react2.default.createElement(_User2.default, {
+            key: user.userid,
+            user: _this6.state.users[userExits],
+            orgID: user.organizationid,
+            orgs: _this6.state.organization,
+            addUser: function addUser(userId, org) {
+              _this6.addUser(userId, org);
+            }
+          });
+        });
+      }
+      return null;
     }
   }, {
     key: 'addUser',
     value: function addUser(userId, org) {
-      var _this6 = this;
+      var _this7 = this;
 
       var body = JSON.stringify({
         userId: userId,
@@ -91631,7 +91670,7 @@ var Users = function (_Component) {
         console.error(error);
       }).then(function (data) {
         console.log(data);
-        _this6.setState({
+        _this7.setState({
           organization: data.rows
         });
       });
@@ -91642,6 +91681,17 @@ var Users = function (_Component) {
       return _react2.default.createElement(
         'div',
         null,
+        _react2.default.createElement(
+          'h1',
+          null,
+          'Users with organization'
+        ),
+        this.displayAppUsers(),
+        _react2.default.createElement(
+          'h1',
+          null,
+          'Users without organization'
+        ),
         this.getUsers()
       );
     }
@@ -92066,8 +92116,22 @@ var User = function (_Component) {
   _createClass(User, [{
     key: 'getOrgItems',
     value: function getOrgItems() {
+      var _this2 = this;
+
       return this.props.orgs.map(function (org, i) {
-        return _react2.default.createElement(_MenuItem2.default, { key: org.name, value: i, primaryText: org.name });
+        console.log('org set = ' + _this2.props.orgID);
+        console.log(org);
+        // TODO: NEED TO CAST orgID to int as it is being treated as a string
+        if (org.orginizationid === _this2.props.orgID) {
+          _this2.setState({
+            value: i,
+            org: org.orginizationid
+          }, function () {
+            return _react2.default.createElement(_MenuItem2.default, { key: org.name, value: i, primaryText: org.name });
+          });
+        } else {
+          return _react2.default.createElement(_MenuItem2.default, { key: org.name, value: i, primaryText: org.name });
+        }
       });
     }
   }, {
@@ -92078,7 +92142,7 @@ var User = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _this2 = this;
+      var _this3 = this;
 
       return _react2.default.createElement(
         _Card.Card,
@@ -92117,7 +92181,7 @@ var User = function (_Component) {
                 label: 'Submit',
                 primary: true,
                 onClick: function onClick() {
-                  _this2.props.addUser(_this2.props.user.user_id, _this2.state.org);
+                  _this3.props.addUser(_this3.props.user.user_id, _this3.state.org);
                 }
               })
             )
