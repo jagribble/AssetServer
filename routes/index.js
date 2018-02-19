@@ -103,14 +103,12 @@ INSERT routes
 */
 
 router.post('/:organization/insert/user', (req, res) => {
-  client.query(`SELECT orginizationID FROM orginization WHERE name='${req.params.orginization}'`).then((organization) => {
-    console.log(organization);
-    client.query(`INSERT INTO AppUser (userID, orginizationID, verified) VALUES ('${req.body.userId}',${organization.rows[0].orginizationid},FALSE)`)
-      .then((result) => {
-        console.log(result.rows[0]);
-        res.send(result);
-      });
-  });
+  console.log(req.body);
+  client.query(`INSERT INTO AppUser (userID, organizationID, verified) VALUES ('${req.body.userId}',${req.body.orgId},FALSE)`)
+    .then((result) => {
+      console.log(result.rows[0]);
+      res.send(result);
+    });
 });
 
 // INSERT asset refering to an orginazarion
