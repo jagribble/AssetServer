@@ -92114,24 +92114,26 @@ var User = function (_Component) {
   }
 
   _createClass(User, [{
-    key: 'getOrgItems',
-    value: function getOrgItems() {
+    key: 'componentWillMount',
+    value: function componentWillMount() {
       var _this2 = this;
 
-      return this.props.orgs.map(function (org, i) {
+      this.props.orgs.forEach(function (org, i) {
         console.log('org set = ' + _this2.props.orgID);
         console.log(org);
-        // TODO: NEED TO CAST orgID to int as it is being treated as a string
-        if (org.orginizationid === _this2.props.orgID) {
+        if (org.orginizationid.toString() === _this2.props.orgID) {
           _this2.setState({
             value: i,
             org: org.orginizationid
-          }, function () {
-            return _react2.default.createElement(_MenuItem2.default, { key: org.name, value: i, primaryText: org.name });
           });
-        } else {
-          return _react2.default.createElement(_MenuItem2.default, { key: org.name, value: i, primaryText: org.name });
         }
+      });
+    }
+  }, {
+    key: 'getOrgItems',
+    value: function getOrgItems() {
+      return this.props.orgs.map(function (org, i) {
+        return _react2.default.createElement(_MenuItem2.default, { key: org.name, value: i, primaryText: org.name });
       });
     }
   }, {

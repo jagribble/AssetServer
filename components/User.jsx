@@ -17,21 +17,22 @@ export default class User extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  getOrgItems() {
-    return this.props.orgs.map((org, i) => {
+  componentWillMount() {
+    this.props.orgs.forEach((org, i) => {
       console.log(`org set = ${this.props.orgID}`);
       console.log(org);
-      // TODO: NEED TO CAST orgID to int as it is being treated as a string
-      if (org.orginizationid === this.props.orgID) {
+      if (org.orginizationid.toString() === this.props.orgID) {
         this.setState({
           value: i,
           org: org.orginizationid,
-        }, () => {
-          return <MenuItem key={org.name} value={i} primaryText={org.name} />;
         });
-      } else {
-        return <MenuItem key={org.name} value={i} primaryText={org.name} />;
       }
+    });
+  }
+
+  getOrgItems() {
+    return this.props.orgs.map((org, i) => {
+      return <MenuItem key={org.name} value={i} primaryText={org.name} />;
     });
   }
 
