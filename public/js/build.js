@@ -91518,6 +91518,7 @@ var Users = function (_Component) {
     _this.getOrgs = _this.getOrgs.bind(_this);
     _this.addUser = _this.addUser.bind(_this);
     _this.displayAppUsers = _this.displayAppUsers.bind(_this);
+    _this.updateUser = _this.updateUser.bind(_this);
     return _this;
   }
 
@@ -91609,6 +91610,7 @@ var Users = function (_Component) {
           return _react2.default.createElement(_User2.default, {
             key: user.user_id,
             user: user,
+            buttonText: 'Submit',
             orgs: _this5.state.organization,
             addUser: function addUser(userId, org) {
               _this5.addUser(userId, org);
@@ -91638,8 +91640,9 @@ var Users = function (_Component) {
             user: _this6.state.users[userExits],
             orgID: user.organizationid,
             orgs: _this6.state.organization,
+            buttonText: 'Update',
             addUser: function addUser(userId, org) {
-              _this6.addUser(userId, org);
+              _this6.updateUser(userId, org);
             }
           });
         });
@@ -91649,8 +91652,6 @@ var Users = function (_Component) {
   }, {
     key: 'addUser',
     value: function addUser(userId, org) {
-      var _this7 = this;
-
       var body = JSON.stringify({
         userId: userId,
         orgId: org
@@ -91670,9 +91671,23 @@ var Users = function (_Component) {
         console.error(error);
       }).then(function (data) {
         console.log(data);
-        _this7.setState({
-          organization: data.rows
-        });
+      });
+    }
+  }, {
+    key: 'updateUser',
+    value: function updateUser(userId, org) {
+      fetch('/api/' + org + '/appuser/' + userId, {
+        method: 'PUT',
+        headers: {
+          'content-Type': 'application/json'
+        }
+      }).then(function (result) {
+        console.log('result');
+        return result.json();
+      }).catch(function (error) {
+        console.error(error);
+      }).then(function (data) {
+        console.log(data);
       });
     }
   }, {
@@ -92180,7 +92195,7 @@ var User = function (_Component) {
               _col2.default,
               { md: '3' },
               _react2.default.createElement(_RaisedButton2.default, {
-                label: 'Submit',
+                label: this.props.buttonText,
                 primary: true,
                 onClick: function onClick() {
                   _this3.props.addUser(_this3.props.user.user_id, _this3.state.org);

@@ -20,6 +20,7 @@ export default class Users extends Component {
     this.getOrgs = this.getOrgs.bind(this);
     this.addUser = this.addUser.bind(this);
     this.displayAppUsers = this.displayAppUsers.bind(this);
+    this.updateUser = this.updateUser.bind(this);
   }
 
   componentWillMount() {
@@ -98,6 +99,7 @@ export default class Users extends Component {
           <User
             key={user.user_id}
             user={user}
+            buttonText="Submit"
             orgs={this.state.organization}
             addUser={(userId, org) => { this.addUser(userId, org); }}
           />);
@@ -122,7 +124,8 @@ export default class Users extends Component {
           user={this.state.users[userExits]}
           orgID={user.organizationid}
           orgs={this.state.organization}
-          addUser={(userId, org) => { this.addUser(userId, org); }}
+          buttonText="Update"
+          addUser={(userId, org) => { this.updateUser(userId, org); }}
         />);
       });
     }
@@ -150,9 +153,23 @@ export default class Users extends Component {
         console.error(error);
       }).then((data) => {
         console.log(data);
-        this.setState({
-          organization: data.rows,
-        });
+      });
+  }
+
+  updateUser(userId, org) {
+    fetch(`/api/${org}/appuser/${userId}`, {
+      method: 'PUT',
+      headers: {
+        'content-Type': 'application/json',
+      },
+    })
+      .then((result) => {
+        console.log('result');
+        return result.json();
+      }).catch((error) => {
+        console.error(error);
+      }).then((data) => {
+        console.log(data);
       });
   }
 

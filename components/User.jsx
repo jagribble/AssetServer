@@ -58,7 +58,7 @@ export default class User extends Component {
             </Col>
             <Col md="3">
               <RaisedButton
-                label="Submit"
+                label={this.props.buttonText}
                 primary
                 onClick={() => {
                   this.props.addUser(this.props.user.user_id, this.state.org);
