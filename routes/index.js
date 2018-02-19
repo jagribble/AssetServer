@@ -243,8 +243,6 @@ router.get('/datapoints', (req, res) => {
 
 /* Update routes */
 router.put('/:organization/appuser/:userID', (req, res) => {
-  // const userID = req.params.userID.replace('%7C', '|');
-  // console.log(userID);
   client.query(`UPDATE AppUser SET organizationID=${req.params.organization} WHERE userID='${req.params.userID}'`).then((result) => {
     console.log(result);
     res.send(result);

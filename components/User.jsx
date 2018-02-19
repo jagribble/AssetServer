@@ -3,8 +3,11 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { Card, CardText } from 'material-ui/Card';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import Row from 'muicss/lib/react/row';
-import Col from 'muicss/lib/react/col';
+import Avatar from 'material-ui/Avatar';
+// import Container from 'muicss/lib/react/container';
+import { Container, Row, Col } from 'react-grid-system';
+// import Col from 'muicss/lib/react/col';
+
 
 export default class User extends Component {
   constructor(props) {
@@ -44,28 +47,34 @@ export default class User extends Component {
     return (
       <Card style={{ margin: '5px' }}>
         <CardText>
-          <Row>
-            <Col md="3">
-              <p>{this.props.user.name}</p>
-            </Col>
-            <Col md="3">
-              <SelectField
-                value={this.state.value}
-                onChange={this.handleChange}
-              >
-                {this.getOrgItems()}
-              </SelectField>
-            </Col>
-            <Col md="3">
-              <RaisedButton
-                label={this.props.buttonText}
-                primary
-                onClick={() => {
+          <Container fluid>
+            <Row>
+              <Col>
+                <Avatar src={this.props.user.picture} />
+              </Col>
+              <Col>
+                <p>{this.props.user.name}</p>
+              </Col>
+              <Col>
+                <SelectField
+                  value={this.state.value}
+                  hintText="Organization"
+                  onChange={this.handleChange}
+                >
+                  {this.getOrgItems()}
+                </SelectField>
+              </Col>
+              <Col>
+                <RaisedButton
+                  label={this.props.buttonText}
+                  primary
+                  onClick={() => {
                   this.props.addUser(this.props.user.user_id, this.state.org);
                 }}
-              />
-            </Col>
-          </Row>
+                />
+              </Col>
+            </Row>
+          </Container>
         </CardText>
       </Card>);
   }

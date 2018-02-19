@@ -5,6 +5,7 @@ import MenuItem from 'material-ui/MenuItem';
 import 'whatwg-fetch';
 
 import User from './User';
+import Loading from './Loading';
 
 export default class Users extends Component {
   constructor(props) {
@@ -13,6 +14,10 @@ export default class Users extends Component {
       users: [],
       appUsers: [],
       organization: [],
+      loading: false,
+      loadingAPI: false,
+      loadingApp: false,
+      loadingOrg: false,
     };
     this.getApiUsers = this.getApiUsers.bind(this);
     this.getUsers = this.getUsers.bind(this);
@@ -30,6 +35,7 @@ export default class Users extends Component {
   }
 
   getApiUsers() {
+    this.setState({ loadingAPI: true });
     fetch('/api/auth/users', {
       header: {
         Authorization: 'Bearer this.state.token',
@@ -39,15 +45,18 @@ export default class Users extends Component {
       return result.json();
     }).catch((error) => {
       console.error(error);
+      this.setState({ loadingAPI: false });
     }).then((data) => {
       console.log(data);
       this.setState({
         users: data,
+        loadingAPI: false,
       });
     });
   }
 
   getAppUsers() {
+    this.setState({ loadingApp: true });
     fetch('/api/appuser', {
       header: {
         Authorization: 'Bearer this.state.token',
@@ -57,15 +66,18 @@ export default class Users extends Component {
       return result.json();
     }).catch((error) => {
       console.error(error);
+      this.setState({ loadingApp: false });
     }).then((data) => {
       console.log(data);
       this.setState({
         appUsers: data.rows,
+        loadingApp: false,
       });
     });
   }
 
   getOrgs() {
+    this.setState({ loadingOrg: true });
     fetch('/api/orginization', {
       header: {
         Authorization: 'Bearer this.state.token',
@@ -75,10 +87,12 @@ export default class Users extends Component {
       return result.json();
     }).catch((error) => {
       console.error(error);
+      this.setState({ loadingOrg: false });
     }).then((data) => {
       console.log(data);
       this.setState({
         organization: data.rows,
+        loadingOrg: false,
       });
     });
   }
@@ -139,6 +153,7 @@ export default class Users extends Component {
     });
     console.log(userId);
     console.log(org);
+    this.setState({ loading: true });
     fetch(`/api/${org}/insert/user`, {
       method: 'POST',
       headers: {
@@ -151,12 +166,19 @@ export default class Users extends Component {
         return result.json();
       }).catch((error) => {
         console.error(error);
+        this.setState({ loading: false });
       }).then((data) => {
         console.log(data);
+        this.getApiUsers();
+        this.getAppUsers();
+        this.getOrgs();
+        this.forceUpdate();
+        this.setState({ loading: false });
       });
   }
 
   updateUser(userId, org) {
+    this.setState({ loading: true });
     fetch(`/api/${org}/appuser/${userId}`, {
       method: 'PUT',
       headers: {
@@ -168,19 +190,35 @@ export default class Users extends Component {
         return result.json();
       }).catch((error) => {
         console.error(error);
+        this.setState({ loading: false });
       }).then((data) => {
         console.log(data);
+        this.getApiUsers();
+        this.getAppUsers();
+        this.getOrgs();
+        this.forceUpdate();
+        this.setState({ loading: false });
       });
   }
 
 
   render() {
+    if (this.state.loading
+      || this.state.loadingAPI
+      || this.state.loadingApp
+      || this.state.loadingOrg) {
+      return <Loading />;
+    }
     return (
       <div>
-        <h1>Users with organization</h1>
-        {this.displayAppUsers()}
-        <h1>Users without organization</h1>
-        {this.getUsers()}
+        <Card>
+          <CardText>
+            <h1>Users with organization</h1>
+            {this.displayAppUsers()}
+            <h1>Users without organization</h1>
+            {this.getUsers()}
+          </CardText>
+        </Card>
       </div>);
   }
 }
