@@ -9,6 +9,7 @@ import createBrowserHistory from 'history/createBrowserHistory';
 import Home from './home';
 import DataWizard from './DataWizard';
 import AssetData from './AssetData';
+import Users from './Users';
 // import Callback from './Auth/callback';
 // import Auth from './Auth/Auth';
 // import history from './Auth/history';
@@ -45,6 +46,7 @@ const makeMainRoutes = () => {
             <Route exact path="/" component={Home} />
             <Route path="/asset/:id" assetid="11" component={AssetData} />
             <Route path="/data" component={DataWizard} />
+            <Route path="/users" component={Users} />
             {/* <Route
           path="/callback"
           render={(props) => {

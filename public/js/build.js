@@ -45512,6 +45512,10 @@ var _AssetData = __webpack_require__(511);
 
 var _AssetData2 = _interopRequireDefault(_AssetData);
 
+var _Users = __webpack_require__(685);
+
+var _Users2 = _interopRequireDefault(_Users);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // import Callback from './Auth/callback';
@@ -45526,7 +45530,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //   }
 // };
 
-var history = (0, _createBrowserHistory2.default)(); // src/routes.js
+// src/routes.js
+
+var history = (0, _createBrowserHistory2.default)();
 
 var goHome = function goHome() {
   console.log('history');
@@ -45555,7 +45561,8 @@ var makeMainRoutes = function makeMainRoutes() {
           null,
           _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _home2.default }),
           _react2.default.createElement(_reactRouterDom.Route, { path: '/asset/:id', assetid: '11', component: _AssetData2.default }),
-          _react2.default.createElement(_reactRouterDom.Route, { path: '/data', component: _DataWizard2.default })
+          _react2.default.createElement(_reactRouterDom.Route, { path: '/data', component: _DataWizard2.default }),
+          _react2.default.createElement(_reactRouterDom.Route, { path: '/users', component: _Users2.default })
         )
       )
     )
@@ -91450,6 +91457,112 @@ var Charts = function Charts(props) {
 };
 
 exports.default = Charts;
+
+/***/ }),
+/* 685 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Card = __webpack_require__(52);
+
+__webpack_require__(107);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Users = function (_Component) {
+  _inherits(Users, _Component);
+
+  function Users(props) {
+    _classCallCheck(this, Users);
+
+    var _this = _possibleConstructorReturn(this, (Users.__proto__ || Object.getPrototypeOf(Users)).call(this, props));
+
+    _this.state = {
+      users: []
+    };
+    _this.getApiUsers = _this.getApiUsers.bind(_this);
+    _this.getUsers = _this.getUsers.bind(_this);
+    return _this;
+  }
+
+  _createClass(Users, [{
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      this.getApiUsers();
+    }
+  }, {
+    key: 'getApiUsers',
+    value: function getApiUsers() {
+      var _this2 = this;
+
+      fetch('/api/auth/users', {
+        header: {
+          Authorization: 'Bearer this.state.token'
+        }
+      }).then(function (result) {
+        console.log('result');
+        return result.json();
+      }).catch(function (error) {
+        console.error(error);
+      }).then(function (data) {
+        console.log(data);
+        _this2.setState({
+          users: data
+        });
+      });
+    }
+  }, {
+    key: 'getUsers',
+    value: function getUsers() {
+      return this.state.users.map(function (user) {
+        return _react2.default.createElement(
+          _Card.Card,
+          { key: user.user_id, style: { margin: '5px' } },
+          _react2.default.createElement(
+            _Card.CardText,
+            null,
+            _react2.default.createElement(
+              'p',
+              null,
+              user.name
+            )
+          )
+        );
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        null,
+        this.getUsers()
+      );
+    }
+  }]);
+
+  return Users;
+}(_react.Component);
+
+exports.default = Users;
 
 /***/ })
 /******/ ]);

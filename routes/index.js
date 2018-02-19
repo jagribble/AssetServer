@@ -1,5 +1,6 @@
 const express = require('express');
 const { Client } = require('pg');
+const request = require('request');
 
 const router = express.Router();
 
@@ -9,8 +10,37 @@ const client = new Client({
   ssl: true,
 });
 
+const options = {
+  method: 'POST',
+  url: 'https://app79553870.auth0.com/oauth/token',
+  headers: { 'content-type': 'application/json' },
+  body:
+   {
+     grant_type: 'client_credentials',
+     client_id: 'fDeYbcz6ZMDRhr4iVkNK5hubFdOFr3yF',
+     client_secret: '6gPLWTrbu8ClXv1ZqW-xZfVOZtBvfkgHOLqSPRie9PIZuzFcXmDnnmffdsi2_W4O',
+     audience: 'https://app79553870.auth0.com/api/v2/',
+   },
+  json: true,
+};
+
+const userRequest = {
+  method: 'GET',
+  url: 'https://app79553870.auth0.com/api/v2/users',
+  headers: {
+    authorization: '',
+    'content-type': 'application/json',
+  },
+};
 /**
 Create database tables
+// user table already defined so AppUser used instead
+CREATE TABLE AppUser(
+  userID VARCHAR(50) PRIMARY KEY,
+  organizationID BIGINT FORIEGN KEY,
+  verified boolean,
+);
+
 
 CREATE TABLE Asset(
   assetID SERIAL PRIMARY KEY,
@@ -46,9 +76,9 @@ client.connect();
 router.get('/', (req, res) => {
   res.render('index');
 });
-
+// CREATE TABLE AppUser (userID VARCHAR(50) PRIMARY KEY,organizationID BIGINT,verified boolean)
 router.get('/change', (req, res) => {
-  client.query('CREATE TABLE DataPoint(dataPointID SERIAL PRIMARY KEY,timeStamp TIMESTAMP,data VARCHAR(50),assetID INT ,dataTypeID INT)').then((result) => {
+  client.query('SELECT * FROM AppUser').then((result) => {
     res.send(result);
   });
 });
@@ -71,6 +101,18 @@ router.delete('/delete/dataType/:dataTypeID', (req, res) => {
 /*
 INSERT routes
 */
+
+router.post('/:organization/insert/user', (req, res) => {
+  client.query(`SELECT orginizationID FROM orginization WHERE name='${req.params.orginization}'`).then((organization) => {
+    console.log(organization);
+    client.query(`INSERT INTO AppUser (userID, orginizationID, verified) VALUES ('${req.body.userId}',${organization.rows[0].orginizationid},FALSE)`)
+      .then((result) => {
+        console.log(result.rows[0]);
+        res.send(result);
+      });
+  });
+});
+
 // INSERT asset refering to an orginazarion
 router.post('/:orginization/insert/asset', (req, res) => {
   client.query(`SELECT orginizationID FROM orginization WHERE name='${req.params.orginization}'`).then((organization) => {
@@ -120,6 +162,27 @@ router.post('/insert/orginization', (req, res) => {
 /*
 SELECT routes
 */
+// request users from Auth0 mangment API
+router.get('/auth/users', (req, res) => {
+  request(options, (error, response, body) => {
+    if (error) throw new Error(error);
+    const token = body.access_token;
+    userRequest.headers.authorization = `Bearer ${token}`;
+    request(userRequest, (err, respon, b) => {
+      if (error) throw new Error(err);
+      // console.log(b);
+      res.send(b);
+    });
+  });
+});
+
+// SELECT all AppUsers
+router.get('/appuser', (req, res) => {
+  client.query('SELECT * FROM AppUser').then((result) => {
+    res.send(result);
+  });
+});
+
 // SELECT all assets owned by an orginization
 router.get('/:orginization/assets', (req, res) => {
   console.log(`SELECT * FROM Asset WHERE orginizationID=(SELECT orginizationID FROM orginization WHERE name='${req.params.orginization}')`);
