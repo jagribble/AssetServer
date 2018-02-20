@@ -49,13 +49,13 @@ export default class User extends Component {
         <CardText>
           <Container fluid>
             <Row>
-              <Col>
+              <Col xs={6} sm={3}>
                 <Avatar src={this.props.user.picture} />
               </Col>
-              <Col>
+              <Col xs={6} sm={3}>
                 <p>{this.props.user.name}</p>
               </Col>
-              <Col>
+              <Col xs={6} sm={3}>
                 <SelectField
                   value={this.state.value}
                   hintText="Organization"
@@ -64,7 +64,7 @@ export default class User extends Component {
                   {this.getOrgItems()}
                 </SelectField>
               </Col>
-              <Col>
+              <Col xs={6} sm={3}>
                 <RaisedButton
                   label={this.props.buttonText}
                   primary

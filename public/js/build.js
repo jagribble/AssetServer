@@ -45478,8 +45478,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _react = __webpack_require__(1);
 
 var _react2 = _interopRequireDefault(_react);
@@ -45492,21 +45490,9 @@ var _MuiThemeProvider = __webpack_require__(321);
 
 var _MuiThemeProvider2 = _interopRequireDefault(_MuiThemeProvider);
 
-var _AppBar = __webpack_require__(401);
-
-var _AppBar2 = _interopRequireDefault(_AppBar);
-
 var _reactRouter = __webpack_require__(722);
 
 var _reactRouterDom = __webpack_require__(421);
-
-var _Drawer = __webpack_require__(719);
-
-var _Drawer2 = _interopRequireDefault(_Drawer);
-
-var _MenuItem = __webpack_require__(510);
-
-var _MenuItem2 = _interopRequireDefault(_MenuItem);
 
 var _createBrowserHistory = __webpack_require__(148);
 
@@ -45532,13 +45518,11 @@ var _Users = __webpack_require__(685);
 
 var _Users2 = _interopRequireDefault(_Users);
 
+var _Help = __webpack_require__(723);
+
+var _Help2 = _interopRequireDefault(_Help);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // src/routes.js
 
 // import Callback from './Auth/callback';
 // import Auth from './Auth/Auth';
@@ -45552,83 +45536,40 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 //   }
 // };
 
+// src/routes.js
+
 var history = (0, _createBrowserHistory2.default)();
 
-var goHome = function goHome() {
-  console.log('history');
-  history.push('/');
-  history.go();
-};
+var MainRoutes = function MainRoutes() {
+  (0, _reactTapEventPlugin2.default)();
 
-var MainRoutes = function (_Component) {
-  _inherits(MainRoutes, _Component);
-
-  function MainRoutes(props) {
-    _classCallCheck(this, MainRoutes);
-
-    var _this = _possibleConstructorReturn(this, (MainRoutes.__proto__ || Object.getPrototypeOf(MainRoutes)).call(this, props));
-
-    _this.state = { open: false };
-    _this.toggleDrawer = _this.toggleDrawer.bind(_this);
-    _this.handleClose = _this.handleClose.bind(_this);
-    _this.direct = _this.direct.bind(_this);
-    return _this;
-  }
-
-  _createClass(MainRoutes, [{
-    key: 'componentWillMount',
-    value: function componentWillMount() {
-      (0, _reactTapEventPlugin2.default)();
-    }
-  }, {
-    key: 'toggleDrawer',
-    value: function toggleDrawer() {
-      this.setState({ open: !this.state.open });
-    }
-  }, {
-    key: 'handleClose',
-    value: function handleClose() {
-      this.setState({ open: false });
-    }
-  }, {
-    key: 'direct',
-    value: function direct(path) {
-      history.push(path);
-      this.setState({ open: false });
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      return _react2.default.createElement(
-        _MuiThemeProvider2.default,
+  return _react2.default.createElement(
+    _MuiThemeProvider2.default,
+    null,
+    _react2.default.createElement(
+      _reactRouter.Router,
+      { history: history },
+      _react2.default.createElement(
+        'div',
         null,
         _react2.default.createElement(
-          _reactRouter.Router,
-          { history: history, template: _Template2.default },
+          _reactRouterDom.Route,
+          null,
           _react2.default.createElement(
             'div',
             null,
-            _react2.default.createElement(
-              _reactRouterDom.Route,
-              null,
-              _react2.default.createElement(
-                'div',
-                null,
-                _react2.default.createElement(_reactRouterDom.Route, { component: _Template2.default }),
-                _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _home2.default }),
-                _react2.default.createElement(_reactRouterDom.Route, { path: '/asset/:id', assetid: '11', component: _AssetData2.default }),
-                _react2.default.createElement(_reactRouterDom.Route, { path: '/data', component: _DataWizard2.default }),
-                _react2.default.createElement(_reactRouterDom.Route, { path: '/users', component: _Users2.default })
-              )
-            )
+            _react2.default.createElement(_reactRouterDom.Route, { component: _Template2.default }),
+            _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _home2.default }),
+            _react2.default.createElement(_reactRouterDom.Route, { path: '/asset/:id', assetid: '11', component: _AssetData2.default }),
+            _react2.default.createElement(_reactRouterDom.Route, { path: '/data', component: _DataWizard2.default }),
+            _react2.default.createElement(_reactRouterDom.Route, { path: '/users', component: _Users2.default }),
+            _react2.default.createElement(_reactRouterDom.Route, { path: '/help', component: _Help2.default })
           )
         )
-      );
-    }
-  }]);
-
-  return MainRoutes;
-}(_react.Component);
+      )
+    )
+  );
+};
 
 exports.default = MainRoutes;
 
@@ -92285,12 +92226,12 @@ var User = function (_Component) {
               null,
               _react2.default.createElement(
                 _reactGridSystem.Col,
-                null,
+                { xs: 6, sm: 3 },
                 _react2.default.createElement(_Avatar2.default, { src: this.props.user.picture })
               ),
               _react2.default.createElement(
                 _reactGridSystem.Col,
-                null,
+                { xs: 6, sm: 3 },
                 _react2.default.createElement(
                   'p',
                   null,
@@ -92299,7 +92240,7 @@ var User = function (_Component) {
               ),
               _react2.default.createElement(
                 _reactGridSystem.Col,
-                null,
+                { xs: 6, sm: 3 },
                 _react2.default.createElement(
                   _SelectField2.default,
                   {
@@ -92312,7 +92253,7 @@ var User = function (_Component) {
               ),
               _react2.default.createElement(
                 _reactGridSystem.Col,
-                null,
+                { xs: 6, sm: 3 },
                 _react2.default.createElement(_RaisedButton2.default, {
                   label: this.props.buttonText,
                   primary: true,
@@ -94925,7 +94866,6 @@ var App = function (_Component) {
   }, {
     key: 'direct',
     value: function direct(path) {
-      console.log(this.props.history);
       this.props.history.push(path);
       this.setState({ open: false });
     }
@@ -94975,6 +94915,13 @@ var App = function (_Component) {
                 return _this2.direct('/users');
               } },
             'Users'
+          ),
+          _react2.default.createElement(
+            _MenuItem2.default,
+            { onClick: function onClick() {
+                return _this2.direct('/help');
+              } },
+            'Help'
           )
         ),
         this.props.children
@@ -95029,6 +94976,71 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
+
+/***/ }),
+/* 723 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Card = __webpack_require__(52);
+
+var _reactGridSystem = __webpack_require__(698);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Help = function Help() {
+  return _react2.default.createElement(
+    _Card.Card,
+    null,
+    _react2.default.createElement(
+      _Card.CardText,
+      null,
+      _react2.default.createElement(
+        _reactGridSystem.Container,
+        null,
+        _react2.default.createElement(
+          'h1',
+          null,
+          'Help'
+        ),
+        _react2.default.createElement(
+          'h3',
+          null,
+          'Home page'
+        ),
+        _react2.default.createElement(
+          _reactGridSystem.Row,
+          null,
+          _react2.default.createElement(
+            _reactGridSystem.Col,
+            null,
+            _react2.default.createElement('img', { src: '/img/home.png', width: '100%', alt: 'Screenshot of the Home page' })
+          ),
+          _react2.default.createElement(
+            _reactGridSystem.Col,
+            null,
+            'On the home page here you can see information about ALL assets. The map provided by Google Maps has all the assets plotted at their relative locations.',
+            _react2.default.createElement('br', null),
+            _react2.default.createElement('br', null),
+            'To select an asset find it in the table below and click on it. This will take you to that assets page in which you are able to see the relevent data for that asset.'
+          )
+        )
+      )
+    )
+  );
+};
+
+exports.default = Help;
 
 /***/ })
 /******/ ]);
