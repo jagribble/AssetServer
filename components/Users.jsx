@@ -41,13 +41,11 @@ export default class Users extends Component {
         Authorization: 'Bearer this.state.token',
       },
     }).then((result) => {
-      console.log('result');
       return result.json();
     }).catch((error) => {
       console.error(error);
       this.setState({ loadingAPI: false });
     }).then((data) => {
-      console.log(data);
       this.setState({
         users: data,
         loadingAPI: false,
@@ -62,13 +60,11 @@ export default class Users extends Component {
         Authorization: 'Bearer this.state.token',
       },
     }).then((result) => {
-      console.log('result');
       return result.json();
     }).catch((error) => {
       console.error(error);
       this.setState({ loadingApp: false });
     }).then((data) => {
-      console.log(data);
       this.setState({
         appUsers: data.rows,
         loadingApp: false,
@@ -83,13 +79,11 @@ export default class Users extends Component {
         Authorization: 'Bearer this.state.token',
       },
     }).then((result) => {
-      console.log('result');
       return result.json();
     }).catch((error) => {
       console.error(error);
       this.setState({ loadingOrg: false });
     }).then((data) => {
-      console.log(data);
       this.setState({
         organization: data.rows,
         loadingOrg: false,
@@ -99,7 +93,7 @@ export default class Users extends Component {
 
 
   getUsers() {
-    // TODO: filter if they are already created in the AppUser table (still allow to modify org)
+    // filter if they are already created in the AppUser table (still allow to modify org)
     return this.state.users.map((user) => {
       const userExits = this.state.appUsers.findIndex((appUser) => {
         if (appUser.userid === user.user_id) {
@@ -107,7 +101,7 @@ export default class Users extends Component {
         }
         return null;
       });
-      console.log(userExits);
+
       if (userExits === -1) {
         return (
           <User
@@ -132,7 +126,7 @@ export default class Users extends Component {
           }
           return null;
         });
-        console.log(user.organizationid);
+
         return (<User
           key={user.userid}
           user={this.state.users[userExits]}
@@ -151,8 +145,7 @@ export default class Users extends Component {
       userId,
       orgId: org,
     });
-    console.log(userId);
-    console.log(org);
+
     this.setState({ loading: true });
     fetch(`/api/${org}/insert/user`, {
       method: 'POST',
@@ -162,13 +155,11 @@ export default class Users extends Component {
       body,
     })
       .then((result) => {
-        console.log('result');
         return result.json();
       }).catch((error) => {
         console.error(error);
         this.setState({ loading: false });
       }).then((data) => {
-        console.log(data);
         this.getApiUsers();
         this.getAppUsers();
         this.getOrgs();
@@ -186,13 +177,11 @@ export default class Users extends Component {
       },
     })
       .then((result) => {
-        console.log('result');
         return result.json();
       }).catch((error) => {
         console.error(error);
         this.setState({ loading: false });
       }).then((data) => {
-        console.log(data);
         this.getApiUsers();
         this.getAppUsers();
         this.getOrgs();

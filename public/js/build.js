@@ -57535,12 +57535,15 @@ var Home = function (_Component) {
     _this.state = {
       loadingAsset: false,
       loadingOrg: false,
+      loadingUsers: false,
       data: [],
+      users: [],
       organizations: [],
       token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlJrSTVNREkyUVRZelFVUXhNamN6UlRjd05FUXdRa05FTUVFM1JVWTRNelJFUTBReFFUVkNOdyJ9.eyJpc3MiOiJodHRwczovL2FwcDc5NTUzODcwLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1YTUzZmQxN2NmYjMxYTI3ODkzNDUyZGYiLCJhdWQiOlsiaHR0cHM6Ly9hc3NldGFyLXN0Zy5oZXJva3VhcHAuY29tLyIsImh0dHBzOi8vYXBwNzk1NTM4NzAuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTUxNjgyNDQ4MiwiZXhwIjoxNTE2OTEwODgyLCJhenAiOiIyQXFmcm40azI0VkV2d0tjdTBXbVJsTWdqNlNrSVU2WiIsInNjb3BlIjoib3BlbmlkIHByb2ZpbGUgcmVhZDphc3NldHMiLCJndHkiOiJwYXNzd29yZCJ9.UT-ziUChuvWE2ezktTNDc-Fc5k2FQtOSuuEbufVUxLeq189Gvck5XNH4Vma-Qa6jF4cUKCu0nVjU4mLueilKAey3WT3DU_yT7bhkBHhc3uuDlng2PCySKWbBroR0X0c9rWhJALI9N4XipPhoXcxxH2D_GO6QWzkpdKDRrbATdVo-GmVCJKuCHuYgUtcX4VvxKFLgiv6okYL9geRvKvK6NAL3m1XQQ4K9As2wAjlE0lQKEVj2IF0ancw6r3QXzju7PvJncjN9uRN-BODOC9zbcW3qy3GCwsyHg_gqdodfLDSnuxIVHKQ3VpTpYm42e77TmTVErQIUZPAK95uXwCjRPg'
     };
     _this.getData = _this.getData.bind(_this);
     _this.getOrganizations = _this.getOrganizations.bind(_this);
+    _this.getUsers = _this.getUsers.bind(_this);
     // const auth = new Auth();
     // auth.login();
     return _this;
@@ -57551,13 +57554,13 @@ var Home = function (_Component) {
     value: function componentDidMount() {
       this.getData();
       this.getOrganizations();
+      this.getUsers();
     }
   }, {
     key: 'getData',
     value: function getData() {
       var _this2 = this;
 
-      console.log('Bearer ' + this.state.token);
       this.setState({
         loadingAsset: true
       });
@@ -57566,7 +57569,6 @@ var Home = function (_Component) {
           Authorization: 'Bearer ' + this.state.token
         }
       }).then(function (result) {
-        console.log('result');
         return result.json();
       }).catch(function (error) {
         console.error(error);
@@ -57592,7 +57594,6 @@ var Home = function (_Component) {
           Authorization: 'Bearer ' + this.state.token
         }
       }).then(function (result) {
-        console.log('result');
         return result.json();
       }).catch(function (error) {
         console.error(error);
@@ -57601,7 +57602,6 @@ var Home = function (_Component) {
           loadingOrg: false
         });
       }).then(function (data) {
-        console.log(data);
         _this3.setState({
           organizations: data.rows,
           loadingOrg: false
@@ -57609,10 +57609,35 @@ var Home = function (_Component) {
       });
     }
   }, {
+    key: 'getUsers',
+    value: function getUsers() {
+      var _this4 = this;
+
+      this.setState({ loadingUsers: true });
+      fetch('/api/appuser', {
+        header: {
+          Authorization: 'Bearer ' + this.state.token
+        }
+      }).then(function (result) {
+        return result.json();
+      }).catch(function (error) {
+        console.error(error);
+        _this4.setState({
+          data: error,
+          loadingOrg: false
+        });
+      }).then(function (data) {
+        _this4.setState({
+          users: data.rows,
+          loadingUsers: false
+        });
+      });
+    }
+  }, {
     key: 'render',
     value: function render() {
       var loading = null;
-      if (this.state.loadingAsset || this.state.loadingOrg) {
+      if (this.state.loadingAsset || this.state.loadingOrg || this.state.loadingUsers) {
         loading = _react2.default.createElement(_Loading2.default, null);
       } else {
         loading = null;
@@ -57643,7 +57668,11 @@ var Home = function (_Component) {
               _react2.default.createElement(
                 _Tabs.Tab,
                 { label: 'Charts' },
-                _react2.default.createElement(_Charts2.default, { assets: this.state.data, orgs: this.state.organizations })
+                _react2.default.createElement(_Charts2.default, {
+                  assets: this.state.data,
+                  users: this.state.users,
+                  orgs: this.state.organizations
+                })
               )
             )
           )
@@ -91413,8 +91442,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 // }
 
+
 var Charts = function Charts(props) {
   var data = {
+    labels: [],
+    datasets: [{
+      data: [],
+      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+      hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+    }]
+  };
+
+  var userChartData = {
     labels: [],
     datasets: [{
       data: [],
@@ -91445,7 +91484,31 @@ var Charts = function Charts(props) {
     data.datasets[0].data.push(organizations['' + org].number);
   });
 
-  console.log(organizations);
+  var userData = {};
+
+  props.users.forEach(function (user) {
+    if (props.orgs.length > 0) {
+      var orgIndex = props.orgs.findIndex(function (org, i) {
+        if (parseInt(user.organizationid, 10) === org.orginizationid) {
+          return org;
+        }
+        return null;
+      });
+
+      var organization = props.orgs[orgIndex];
+      if (!userData[organization.name]) {
+        userData[organization.name] = { number: 1 };
+      } else {
+        userData[organization.name].number += 1;
+      }
+    }
+  });
+
+  Object.keys(userData).forEach(function (org) {
+    userChartData.labels.push(org);
+    userChartData.datasets[0].data.push(userData['' + org].number);
+  });
+
   return _react2.default.createElement(
     'div',
     null,
@@ -91454,7 +91517,13 @@ var Charts = function Charts(props) {
       null,
       'Number of Assets per Organization'
     ),
-    _react2.default.createElement(_reactChartjs.Pie, { data: data })
+    _react2.default.createElement(_reactChartjs.Pie, { data: data }),
+    _react2.default.createElement(
+      'h1',
+      null,
+      'Number of Users per Organization'
+    ),
+    _react2.default.createElement(_reactChartjs.Pie, { data: userChartData })
   );
 };
 
@@ -91550,13 +91619,11 @@ var Users = function (_Component) {
           Authorization: 'Bearer this.state.token'
         }
       }).then(function (result) {
-        console.log('result');
         return result.json();
       }).catch(function (error) {
         console.error(error);
         _this2.setState({ loadingAPI: false });
       }).then(function (data) {
-        console.log(data);
         _this2.setState({
           users: data,
           loadingAPI: false
@@ -91574,13 +91641,11 @@ var Users = function (_Component) {
           Authorization: 'Bearer this.state.token'
         }
       }).then(function (result) {
-        console.log('result');
         return result.json();
       }).catch(function (error) {
         console.error(error);
         _this3.setState({ loadingApp: false });
       }).then(function (data) {
-        console.log(data);
         _this3.setState({
           appUsers: data.rows,
           loadingApp: false
@@ -91598,13 +91663,11 @@ var Users = function (_Component) {
           Authorization: 'Bearer this.state.token'
         }
       }).then(function (result) {
-        console.log('result');
         return result.json();
       }).catch(function (error) {
         console.error(error);
         _this4.setState({ loadingOrg: false });
       }).then(function (data) {
-        console.log(data);
         _this4.setState({
           organization: data.rows,
           loadingOrg: false
@@ -91616,7 +91679,7 @@ var Users = function (_Component) {
     value: function getUsers() {
       var _this5 = this;
 
-      // TODO: filter if they are already created in the AppUser table (still allow to modify org)
+      // filter if they are already created in the AppUser table (still allow to modify org)
       return this.state.users.map(function (user) {
         var userExits = _this5.state.appUsers.findIndex(function (appUser) {
           if (appUser.userid === user.user_id) {
@@ -91624,7 +91687,7 @@ var Users = function (_Component) {
           }
           return null;
         });
-        console.log(userExits);
+
         if (userExits === -1) {
           return _react2.default.createElement(_User2.default, {
             key: user.user_id,
@@ -91653,7 +91716,7 @@ var Users = function (_Component) {
             }
             return null;
           });
-          console.log(user.organizationid);
+
           return _react2.default.createElement(_User2.default, {
             key: user.userid,
             user: _this6.state.users[userExits],
@@ -91677,8 +91740,7 @@ var Users = function (_Component) {
         userId: userId,
         orgId: org
       });
-      console.log(userId);
-      console.log(org);
+
       this.setState({ loading: true });
       fetch('/api/' + org + '/insert/user', {
         method: 'POST',
@@ -91687,13 +91749,11 @@ var Users = function (_Component) {
         },
         body: body
       }).then(function (result) {
-        console.log('result');
         return result.json();
       }).catch(function (error) {
         console.error(error);
         _this7.setState({ loading: false });
       }).then(function (data) {
-        console.log(data);
         _this7.getApiUsers();
         _this7.getAppUsers();
         _this7.getOrgs();
@@ -91713,13 +91773,11 @@ var Users = function (_Component) {
           'content-Type': 'application/json'
         }
       }).then(function (result) {
-        console.log('result');
         return result.json();
       }).catch(function (error) {
         console.error(error);
         _this8.setState({ loading: false });
       }).then(function (data) {
-        console.log(data);
         _this8.getApiUsers();
         _this8.getAppUsers();
         _this8.getOrgs();
@@ -92185,8 +92243,6 @@ var User = function (_Component) {
       var _this2 = this;
 
       this.props.orgs.forEach(function (org, i) {
-        console.log('org set = ' + _this2.props.orgID);
-        console.log(org);
         if (org.orginizationid.toString() === _this2.props.orgID) {
           _this2.setState({
             value: i,

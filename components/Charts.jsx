@@ -7,8 +7,26 @@ import { Pie } from 'react-chartjs-2';
 //
 // }
 
+
 const Charts = (props) => {
   const data = {
+    labels: [],
+    datasets: [{
+      data: [],
+      backgroundColor: [
+        '#FF6384',
+        '#36A2EB',
+        '#FFCE56',
+      ],
+      hoverBackgroundColor: [
+        '#FF6384',
+        '#36A2EB',
+        '#FFCE56',
+      ],
+    }],
+  };
+
+  const userChartData = {
     labels: [],
     datasets: [{
       data: [],
@@ -47,11 +65,39 @@ const Charts = (props) => {
     data.datasets[0].data.push(organizations[`${org}`].number);
   });
 
-  console.log(organizations);
+  const userData = {};
+
+  props.users.forEach((user) => {
+    if (props.orgs.length > 0) {
+      const orgIndex = props.orgs.findIndex((org, i) => {
+        if (parseInt(user.organizationid, 10) === org.orginizationid) {
+          return org;
+        }
+        return null;
+      });
+
+      const organization = props.orgs[orgIndex];
+      if (!userData[organization.name]) {
+        userData[organization.name] = { number: 1 };
+      } else {
+        userData[organization.name].number += 1;
+      }
+    }
+  });
+
+
+  Object.keys(userData).forEach((org) => {
+    userChartData.labels.push(org);
+    userChartData.datasets[0].data.push(userData[`${org}`].number);
+  });
+
+
   return (
     <div>
       <h1>Number of Assets per Organization</h1>
       <Pie data={data} />
+      <h1>Number of Users per Organization</h1>
+      <Pie data={userChartData} />
     </div>);
 };
 

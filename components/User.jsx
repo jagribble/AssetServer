@@ -22,8 +22,6 @@ export default class User extends Component {
 
   componentWillMount() {
     this.props.orgs.forEach((org, i) => {
-      console.log(`org set = ${this.props.orgID}`);
-      console.log(org);
       if (org.orginizationid.toString() === this.props.orgID) {
         this.setState({
           value: i,
