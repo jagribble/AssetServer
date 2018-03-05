@@ -83,6 +83,11 @@ router.get('/change', (req, res) => {
   });
 });
 
+router.post('/varible', (req, res) => {
+  console.log(req.body.sid);
+  res.send('Session ID logged');
+});
+
 /*
 Delete routes
 */
