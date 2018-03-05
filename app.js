@@ -69,6 +69,12 @@ app.use((req, res, next) => {
   next(err);
 });
 
+
+app.post('/varible', (req, res) => {
+  console.log(req.body.sid);
+  res.send('Session ID logged');
+});
+
 // error handlers
 
 // development error handler
