@@ -4,9 +4,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import { Card, CardText } from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
-import Row from 'muicss/lib/react/row';
-import Col from 'muicss/lib/react/col';
-import Container from 'muicss/lib/react/container';
+import { Container, Row, Col } from 'react-grid-system';
 import 'whatwg-fetch';
 
 import Loading from './Loading';
@@ -93,10 +91,10 @@ export default class DataType extends Component {
             <h2>Make a data type</h2>
 
             <Row>
-              <Col xs="12" md="8">
+              <Col xs={12} md={8}>
         Name of data Type:
               </Col>
-              <Col xs="12" md="8">
+              <Col xs={12} md={8}>
                 <TextField
                   id="name"
                   name="name"
@@ -107,10 +105,10 @@ export default class DataType extends Component {
             </Row>
 
             <Row>
-              <Col xs="12" md="8">
+              <Col xs={12} md={8}>
         Unit of data Type:
               </Col>
-              <Col xs="12" md="8">
+              <Col xs={12} md={8}>
                 <TextField
                   id="unit"
                   name="unit"
