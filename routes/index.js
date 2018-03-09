@@ -184,7 +184,7 @@ router.get('/appuser', (req, res) => {
 router.get('/appuser/:userid', (req, res) => {
   const user = decodeURI(req.params.userid);
   client.query(`SELECT * FROM AppUser WHERE userID='${user}'`).then((result) => {
-    res.send(result.rows);
+    res.send(result);
   });
 });
 
