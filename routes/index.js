@@ -190,11 +190,13 @@ router.get('/appuser/:userid', (req, res) => {
 
 // SELECT all assets owned by an orginization
 router.get('/:orginization/assets', (req, res) => {
-  console.log(`SELECT * FROM Asset WHERE orginizationID=(SELECT orginizationID FROM orginization WHERE name='${req.params.orginization}')`);
-  client.query(`SELECT * FROM Asset WHERE orginizationID=(SELECT orginizationID FROM orginization WHERE name='${req.params.orginization}')`).then((result) => {
+  // console.log(`SELECT * FROM Asset WHERE orginizationID=(SELECT
+  // orginizationID FROM orginization WHERE name='${req.params.orginization}')`);
+  client.query(`SELECT * FROM Asset WHERE orginizationID=${req.params.orginization}`).then((result) => {
     res.send(result);
   });
 });
+
 
 // SELECT asset where the assetID matches
 router.get('/asset/:id', (req, res) => {
