@@ -181,6 +181,13 @@ router.get('/appuser', (req, res) => {
   });
 });
 
+router.get('/appuser/:userid', (req, res) => {
+  const user = decodeURI(req.params.userid);
+  client.query(`SELECT * FROM AppUser WHERE userID='${user}'`).then((result) => {
+    res.send(result.rows);
+  });
+});
+
 // SELECT all assets owned by an orginization
 router.get('/:orginization/assets', (req, res) => {
   console.log(`SELECT * FROM Asset WHERE orginizationID=(SELECT orginizationID FROM orginization WHERE name='${req.params.orginization}')`);
