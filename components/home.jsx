@@ -22,11 +22,11 @@ export default class Home extends Component {
       loadingUsers: false,
       data: [],
       users: [],
-      organizations: [],
+      organisations: [],
       token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlJrSTVNREkyUVRZelFVUXhNamN6UlRjd05FUXdRa05FTUVFM1JVWTRNelJFUTBReFFUVkNOdyJ9.eyJpc3MiOiJodHRwczovL2FwcDc5NTUzODcwLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1YTUzZmQxN2NmYjMxYTI3ODkzNDUyZGYiLCJhdWQiOlsiaHR0cHM6Ly9hc3NldGFyLXN0Zy5oZXJva3VhcHAuY29tLyIsImh0dHBzOi8vYXBwNzk1NTM4NzAuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTUxNjgyNDQ4MiwiZXhwIjoxNTE2OTEwODgyLCJhenAiOiIyQXFmcm40azI0VkV2d0tjdTBXbVJsTWdqNlNrSVU2WiIsInNjb3BlIjoib3BlbmlkIHByb2ZpbGUgcmVhZDphc3NldHMiLCJndHkiOiJwYXNzd29yZCJ9.UT-ziUChuvWE2ezktTNDc-Fc5k2FQtOSuuEbufVUxLeq189Gvck5XNH4Vma-Qa6jF4cUKCu0nVjU4mLueilKAey3WT3DU_yT7bhkBHhc3uuDlng2PCySKWbBroR0X0c9rWhJALI9N4XipPhoXcxxH2D_GO6QWzkpdKDRrbATdVo-GmVCJKuCHuYgUtcX4VvxKFLgiv6okYL9geRvKvK6NAL3m1XQQ4K9As2wAjlE0lQKEVj2IF0ancw6r3QXzju7PvJncjN9uRN-BODOC9zbcW3qy3GCwsyHg_gqdodfLDSnuxIVHKQ3VpTpYm42e77TmTVErQIUZPAK95uXwCjRPg',
     };
     this.getData = this.getData.bind(this);
-    this.getOrganizations = this.getOrganizations.bind(this);
+    this.getOrganisations = this.getOrganisations.bind(this);
     this.getUsers = this.getUsers.bind(this);
     // const auth = new Auth();
     // auth.login();
@@ -34,7 +34,7 @@ export default class Home extends Component {
 
   componentDidMount() {
     this.getData();
-    this.getOrganizations();
+    this.getOrganisations();
     this.getUsers();
   }
 
@@ -63,9 +63,9 @@ export default class Home extends Component {
     });
   }
 
-  getOrganizations() {
+  getOrganisations() {
     this.setState({ loadingOrg: true });
-    fetch('/api/orginization', {
+    fetch('/api/organisation', {
       header: {
         Authorization: `Bearer ${this.state.token}`,
       },
@@ -79,7 +79,7 @@ export default class Home extends Component {
       });
     }).then((data) => {
       this.setState({
-        organizations: data.rows,
+        organisations: data.rows,
         loadingOrg: false,
       });
     });
@@ -127,7 +127,7 @@ export default class Home extends Component {
                 <Charts
                   assets={this.state.data}
                   users={this.state.users}
-                  orgs={this.state.organizations}
+                  orgs={this.state.organisations}
                 />
               </Tab>
             </Tabs>

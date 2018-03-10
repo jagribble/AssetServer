@@ -10,7 +10,7 @@ export default class CreateComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      organization: '',
+      organisation: '',
       loading: false,
     };
     this.change = this.change.bind(this);
@@ -18,15 +18,15 @@ export default class CreateComponent extends Component {
   }
 
   change(event) {
-    this.setState({ organization: event.target.value });
+    this.setState({ organisation: event.target.value });
   }
 
   submit() {
     const data = {
-      name: this.state.organization,
+      name: this.state.organisation,
     };
     this.setState({ loading: true });
-    fetch('/api/insert/organization', {
+    fetch('/api/insert/organisation', {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -52,12 +52,12 @@ export default class CreateComponent extends Component {
         <CardText>
           <Container>
             <Row>
-              <Col><center>Fill form below to create an organization</center></Col>
+              <Col><center>Fill form below to create an organisation</center></Col>
             </Row>
             <Row>
-              <Col><center>Organization name</center></Col>
+              <Col><center>Organisation name</center></Col>
               <Col>
-                <TextField name="org_name" value={this.state.organization} onChange={this.change} />
+                <TextField name="org_name" value={this.state.organisation} onChange={this.change} />
               </Col>
             </Row>
             <Row>

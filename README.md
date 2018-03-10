@@ -9,18 +9,18 @@ There are 4 SQL tables that the server gets data from to simulate retrieving dat
 
 ## Insert data
 ### Organization
-> `POST /insert/orginization`
+> `POST /insert/organisation`
 
 Expexted request body
 ```
 {
-  "name":"test_orginzation"
+  "name":"test_organisation"
 }
 ```
 ### Asset
-> `POST /:orginization/insert/asset`
+> `POST /:organisation/insert/asset`
 
-`:orginzation` is the orginization name
+`:organisation` is the organisation name
 Expected request body
 ```
 {
@@ -33,7 +33,7 @@ Expected request body
 ### DataTypes
 > `POST /intert/datatype`
 
-Expected request body 
+Expected request body
 ```
 {
   "name":"Pressure",

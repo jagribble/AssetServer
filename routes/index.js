@@ -102,7 +102,7 @@ router.delete('/delete/dataType/:dataTypeID', (req, res) => {
 INSERT routes
 */
 
-router.post('/:organization/insert/user', (req, res) => {
+router.post('/:organisation/insert/user', (req, res) => {
   console.log(req.body);
   client.query(`INSERT INTO AppUser (userID, organizationID, verified) VALUES ('${req.body.userId}',${req.body.orgId},FALSE)`)
     .then((result) => {
@@ -112,10 +112,10 @@ router.post('/:organization/insert/user', (req, res) => {
 });
 
 // INSERT asset refering to an orginazarion
-router.post('/:orginization/insert/asset', (req, res) => {
-  client.query(`SELECT orginizationID FROM orginization WHERE name='${req.params.orginization}'`).then((organization) => {
-    console.log(organization);
-    client.query(`INSERT INTO Asset (assetName, assetX, assetY,orginizationID) VALUES ('${req.body.name}', ${req.body.assetX}, ${req.body.assetY}, ${organization.rows[0].orginizationid})`)
+router.post('/:organisation/insert/asset', (req, res) => {
+  client.query(`SELECT orginizationID FROM orginization WHERE name='${req.params.organisation}'`).then((organisation) => {
+    console.log(organisation);
+    client.query(`INSERT INTO Asset (assetName, assetX, assetY,orginizationID) VALUES ('${req.body.name}', ${req.body.assetX}, ${req.body.assetY}, ${organisation.rows[0].orginizationid})`)
       .then((result) => {
         console.log(result.rows[0]);
         res.send(result);
@@ -149,7 +149,7 @@ router.post('/insert/asset/:assetID/datapoint/datatype/:dataTypeID', (req, res) 
 });
 
 // INSERT an organization
-router.post('/insert/organization', (req, res) => {
+router.post('/insert/organisation', (req, res) => {
   console.log(req.body.name);
   client.query(`INSERT INTO orginization (name) VALUES ('${req.body.name}')`)
     .then((result) => {
@@ -189,10 +189,10 @@ router.get('/appuser/:userid', (req, res) => {
 });
 
 // SELECT all assets owned by an orginization
-router.get('/:orginization/assets', (req, res) => {
+router.get('/:organisation/assets', (req, res) => {
   // console.log(`SELECT * FROM Asset WHERE orginizationID=(SELECT
   // orginizationID FROM orginization WHERE name='${req.params.orginization}')`);
-  client.query(`SELECT * FROM Asset WHERE orginizationID=${req.params.orginization}`).then((result) => {
+  client.query(`SELECT * FROM Asset WHERE orginizationID=${req.params.organisation}`).then((result) => {
     res.send(result);
   });
 });
@@ -223,8 +223,8 @@ router.get('/assets', (req, res) => {
     });
 });
 
-// SELECT ALL orginization
-router.get('/orginization', (req, res) => {
+// SELECT ALL organisation
+router.get('/organisation', (req, res) => {
   client.query('SELECT * FROM orginization')
     .then((result) => {
       console.log(result);
@@ -234,6 +234,12 @@ router.get('/orginization', (req, res) => {
       console.error(e.stack);
       res.send(e);
     });
+});
+
+router.get('/organisation/:id', (req, res) => {
+  client.query(`SELECT * FROM orginization WHERE orginizationID=${req.params.id}`).then((result) => {
+    res.send(result);
+  });
 });
 
 // SELECT all data types
@@ -251,8 +257,8 @@ router.get('/datapoints', (req, res) => {
 });
 
 /* Update routes */
-router.put('/:organization/appuser/:userID', (req, res) => {
-  client.query(`UPDATE AppUser SET organizationID=${req.params.organization} WHERE userID='${req.params.userID}'`).then((result) => {
+router.put('/:organisation/appuser/:userID', (req, res) => {
+  client.query(`UPDATE AppUser SET organizationID=${req.params.organisation} WHERE userID='${req.params.userID}'`).then((result) => {
     console.log(result);
     res.send(result);
   });

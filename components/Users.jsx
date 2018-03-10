@@ -13,7 +13,7 @@ export default class Users extends Component {
     this.state = {
       users: [],
       appUsers: [],
-      organization: [],
+      organisation: [],
       loading: false,
       loadingAPI: false,
       loadingApp: false,
@@ -74,7 +74,7 @@ export default class Users extends Component {
 
   getOrgs() {
     this.setState({ loadingOrg: true });
-    fetch('/api/orginization', {
+    fetch('/api/organisation', {
       header: {
         Authorization: 'Bearer this.state.token',
       },
@@ -85,7 +85,7 @@ export default class Users extends Component {
       this.setState({ loadingOrg: false });
     }).then((data) => {
       this.setState({
-        organization: data.rows,
+        organisation: data.rows,
         loadingOrg: false,
       });
     });
@@ -108,7 +108,7 @@ export default class Users extends Component {
             key={user.user_id}
             user={user}
             buttonText="Submit"
-            orgs={this.state.organization}
+            orgs={this.state.organisation}
             addUser={(userId, org) => { this.addUser(userId, org); }}
           />);
       }
@@ -131,7 +131,7 @@ export default class Users extends Component {
           key={user.userid}
           user={this.state.users[userExits]}
           orgID={user.organizationid}
-          orgs={this.state.organization}
+          orgs={this.state.organisation}
           buttonText="Update"
           addUser={(userId, org) => { this.updateUser(userId, org); }}
         />);
@@ -202,9 +202,9 @@ export default class Users extends Component {
       <div>
         <Card>
           <CardText>
-            <h1>Users with organization</h1>
+            <h1>Users with organisation</h1>
             {this.displayAppUsers()}
-            <h1>Users without organization</h1>
+            <h1>Users without organisation</h1>
             {this.getUsers()}
           </CardText>
         </Card>

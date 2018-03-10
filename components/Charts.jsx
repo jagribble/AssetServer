@@ -42,27 +42,27 @@ const Charts = (props) => {
       ],
     }],
   };
-  // For each asset go through and one to the relevant organization count
-  const organizations = {};
+  // For each asset go through and one to the relevant organisation count
+  const organisations = {};
   props.assets.forEach((asset) => {
     if (props.orgs.length > 0) {
-      const organizationIndex = props.orgs.findIndex((org, i) => {
+      const organisationIndex = props.orgs.findIndex((org, i) => {
         if (org.orginizationid === asset.orginizationid) {
           return org;
         }
       });
-      const organization = props.orgs[organizationIndex];
-      if (!organizations[organization.name]) {
-        organizations[organization.name] = { number: 1 };
+      const organisation = props.orgs[organisationIndex];
+      if (!organisations[organisation.name]) {
+        organisations[organisation.name] = { number: 1 };
       } else {
-        organizations[organization.name].number += 1;
+        organisations[organisation.name].number += 1;
       }
     }
   });
   // add the numbers to the chart data
-  Object.keys(organizations).forEach((org) => {
+  Object.keys(organisations).forEach((org) => {
     data.labels.push(org);
-    data.datasets[0].data.push(organizations[`${org}`].number);
+    data.datasets[0].data.push(organisations[`${org}`].number);
   });
 
   const userData = {};
@@ -76,11 +76,11 @@ const Charts = (props) => {
         return null;
       });
 
-      const organization = props.orgs[orgIndex];
-      if (!userData[organization.name]) {
-        userData[organization.name] = { number: 1 };
+      const organisation = props.orgs[orgIndex];
+      if (!userData[organisation.name]) {
+        userData[organisation.name] = { number: 1 };
       } else {
-        userData[organization.name].number += 1;
+        userData[organisation.name].number += 1;
       }
     }
   });
@@ -94,9 +94,9 @@ const Charts = (props) => {
 
   return (
     <div>
-      <h1>Number of Assets per Organization</h1>
+      <h1>Number of Assets per Organisation</h1>
       <Pie data={data} />
-      <h1>Number of Users per Organization</h1>
+      <h1>Number of Users per Organisation</h1>
       <Pie data={userChartData} />
     </div>);
 };

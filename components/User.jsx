@@ -56,7 +56,7 @@ export default class User extends Component {
               <Col xs={6} sm={3}>
                 <SelectField
                   value={this.state.value}
-                  hintText="Organization"
+                  hintText="organisation"
                   onChange={this.handleChange}
                 >
                   {this.getOrgItems()}

@@ -16100,11 +16100,11 @@ var Home = function (_Component) {
       loadingUsers: false,
       data: [],
       users: [],
-      organizations: [],
+      organisations: [],
       token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlJrSTVNREkyUVRZelFVUXhNamN6UlRjd05FUXdRa05FTUVFM1JVWTRNelJFUTBReFFUVkNOdyJ9.eyJpc3MiOiJodHRwczovL2FwcDc5NTUzODcwLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw1YTUzZmQxN2NmYjMxYTI3ODkzNDUyZGYiLCJhdWQiOlsiaHR0cHM6Ly9hc3NldGFyLXN0Zy5oZXJva3VhcHAuY29tLyIsImh0dHBzOi8vYXBwNzk1NTM4NzAuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTUxNjgyNDQ4MiwiZXhwIjoxNTE2OTEwODgyLCJhenAiOiIyQXFmcm40azI0VkV2d0tjdTBXbVJsTWdqNlNrSVU2WiIsInNjb3BlIjoib3BlbmlkIHByb2ZpbGUgcmVhZDphc3NldHMiLCJndHkiOiJwYXNzd29yZCJ9.UT-ziUChuvWE2ezktTNDc-Fc5k2FQtOSuuEbufVUxLeq189Gvck5XNH4Vma-Qa6jF4cUKCu0nVjU4mLueilKAey3WT3DU_yT7bhkBHhc3uuDlng2PCySKWbBroR0X0c9rWhJALI9N4XipPhoXcxxH2D_GO6QWzkpdKDRrbATdVo-GmVCJKuCHuYgUtcX4VvxKFLgiv6okYL9geRvKvK6NAL3m1XQQ4K9As2wAjlE0lQKEVj2IF0ancw6r3QXzju7PvJncjN9uRN-BODOC9zbcW3qy3GCwsyHg_gqdodfLDSnuxIVHKQ3VpTpYm42e77TmTVErQIUZPAK95uXwCjRPg'
     };
     _this.getData = _this.getData.bind(_this);
-    _this.getOrganizations = _this.getOrganizations.bind(_this);
+    _this.getOrganisations = _this.getOrganisations.bind(_this);
     _this.getUsers = _this.getUsers.bind(_this);
     // const auth = new Auth();
     // auth.login();
@@ -16115,7 +16115,7 @@ var Home = function (_Component) {
     key: 'componentDidMount',
     value: function componentDidMount() {
       this.getData();
-      this.getOrganizations();
+      this.getOrganisations();
       this.getUsers();
     }
   }, {
@@ -16146,12 +16146,12 @@ var Home = function (_Component) {
       });
     }
   }, {
-    key: 'getOrganizations',
-    value: function getOrganizations() {
+    key: 'getOrganisations',
+    value: function getOrganisations() {
       var _this3 = this;
 
       this.setState({ loadingOrg: true });
-      fetch('/api/orginization', {
+      fetch('/api/organisation', {
         header: {
           Authorization: 'Bearer ' + this.state.token
         }
@@ -16165,7 +16165,7 @@ var Home = function (_Component) {
         });
       }).then(function (data) {
         _this3.setState({
-          organizations: data.rows,
+          organisations: data.rows,
           loadingOrg: false
         });
       });
@@ -16233,7 +16233,7 @@ var Home = function (_Component) {
                 _react2.default.createElement(_Charts2.default, {
                   assets: this.state.data,
                   users: this.state.users,
-                  orgs: this.state.organizations
+                  orgs: this.state.organisations
                 })
               )
             )
@@ -30542,7 +30542,7 @@ var Users = function (_Component) {
     _this.state = {
       users: [],
       appUsers: [],
-      organization: [],
+      organisation: [],
       loading: false,
       loadingAPI: false,
       loadingApp: false,
@@ -30615,7 +30615,7 @@ var Users = function (_Component) {
       var _this4 = this;
 
       this.setState({ loadingOrg: true });
-      fetch('/api/orginization', {
+      fetch('/api/organisation', {
         header: {
           Authorization: 'Bearer this.state.token'
         }
@@ -30626,7 +30626,7 @@ var Users = function (_Component) {
         _this4.setState({ loadingOrg: false });
       }).then(function (data) {
         _this4.setState({
-          organization: data.rows,
+          organisation: data.rows,
           loadingOrg: false
         });
       });
@@ -30650,7 +30650,7 @@ var Users = function (_Component) {
             key: user.user_id,
             user: user,
             buttonText: 'Submit',
-            orgs: _this5.state.organization,
+            orgs: _this5.state.organisation,
             addUser: function addUser(userId, org) {
               _this5.addUser(userId, org);
             }
@@ -30678,7 +30678,7 @@ var Users = function (_Component) {
             key: user.userid,
             user: _this6.state.users[userExits],
             orgID: user.organizationid,
-            orgs: _this6.state.organization,
+            orgs: _this6.state.organisation,
             buttonText: 'Update',
             addUser: function addUser(userId, org) {
               _this6.updateUser(userId, org);
@@ -30760,13 +30760,13 @@ var Users = function (_Component) {
             _react2.default.createElement(
               'h1',
               null,
-              'Users with organization'
+              'Users with organisation'
             ),
             this.displayAppUsers(),
             _react2.default.createElement(
               'h1',
               null,
-              'Users without organization'
+              'Users without organisation'
             ),
             this.getUsers()
           )
@@ -48048,7 +48048,7 @@ var MainRoutes = function MainRoutes() {
             _react2.default.createElement(_reactRouterDom.Route, { path: '/data', component: _DataWizard2.default }),
             _react2.default.createElement(_reactRouterDom.Route, { path: '/users', component: _Users2.default }),
             _react2.default.createElement(_reactRouterDom.Route, { path: '/help', component: _Help2.default }),
-            _react2.default.createElement(_reactRouterDom.Route, { path: '/organization', component: _CreateOrganization2.default })
+            _react2.default.createElement(_reactRouterDom.Route, { path: '/organisation', component: _CreateOrganization2.default })
           )
         )
       )
@@ -57336,9 +57336,9 @@ var App = function (_Component) {
           _react2.default.createElement(
             _MenuItem2.default,
             { onClick: function onClick() {
-                return _this2.direct('/organization');
+                return _this2.direct('/organisation');
               } },
-            'Organization'
+            'Organisation'
           ),
           _react2.default.createElement(
             _MenuItem2.default,
@@ -71317,27 +71317,27 @@ var Charts = function Charts(props) {
       hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
     }]
   };
-  // For each asset go through and one to the relevant organization count
-  var organizations = {};
+  // For each asset go through and one to the relevant organisation count
+  var organisations = {};
   props.assets.forEach(function (asset) {
     if (props.orgs.length > 0) {
-      var organizationIndex = props.orgs.findIndex(function (org, i) {
+      var organisationIndex = props.orgs.findIndex(function (org, i) {
         if (org.orginizationid === asset.orginizationid) {
           return org;
         }
       });
-      var organization = props.orgs[organizationIndex];
-      if (!organizations[organization.name]) {
-        organizations[organization.name] = { number: 1 };
+      var organisation = props.orgs[organisationIndex];
+      if (!organisations[organisation.name]) {
+        organisations[organisation.name] = { number: 1 };
       } else {
-        organizations[organization.name].number += 1;
+        organisations[organisation.name].number += 1;
       }
     }
   });
   // add the numbers to the chart data
-  Object.keys(organizations).forEach(function (org) {
+  Object.keys(organisations).forEach(function (org) {
     data.labels.push(org);
-    data.datasets[0].data.push(organizations['' + org].number);
+    data.datasets[0].data.push(organisations['' + org].number);
   });
 
   var userData = {};
@@ -71351,11 +71351,11 @@ var Charts = function Charts(props) {
         return null;
       });
 
-      var organization = props.orgs[orgIndex];
-      if (!userData[organization.name]) {
-        userData[organization.name] = { number: 1 };
+      var organisation = props.orgs[orgIndex];
+      if (!userData[organisation.name]) {
+        userData[organisation.name] = { number: 1 };
       } else {
-        userData[organization.name].number += 1;
+        userData[organisation.name].number += 1;
       }
     }
   });
@@ -71371,13 +71371,13 @@ var Charts = function Charts(props) {
     _react2.default.createElement(
       'h1',
       null,
-      'Number of Assets per Organization'
+      'Number of Assets per Organisation'
     ),
     _react2.default.createElement(_reactChartjs.Pie, { data: data }),
     _react2.default.createElement(
       'h1',
       null,
-      'Number of Users per Organization'
+      'Number of Users per Organisation'
     ),
     _react2.default.createElement(_reactChartjs.Pie, { data: userChartData })
   );
@@ -93909,7 +93909,7 @@ var User = function (_Component) {
                   _SelectField2.default,
                   {
                     value: this.state.value,
-                    hintText: 'Organization',
+                    hintText: 'organisation',
                     onChange: this.handleChange
                   },
                   this.getOrgItems()
@@ -94053,7 +94053,7 @@ var CreateComponent = function (_Component) {
     var _this = _possibleConstructorReturn(this, (CreateComponent.__proto__ || Object.getPrototypeOf(CreateComponent)).call(this, props));
 
     _this.state = {
-      organization: '',
+      organisation: '',
       loading: false
     };
     _this.change = _this.change.bind(_this);
@@ -94064,7 +94064,7 @@ var CreateComponent = function (_Component) {
   _createClass(CreateComponent, [{
     key: 'change',
     value: function change(event) {
-      this.setState({ organization: event.target.value });
+      this.setState({ organisation: event.target.value });
     }
   }, {
     key: 'submit',
@@ -94072,10 +94072,10 @@ var CreateComponent = function (_Component) {
       var _this2 = this;
 
       var data = {
-        name: this.state.organization
+        name: this.state.organisation
       };
       this.setState({ loading: true });
-      fetch('/api/insert/organization', {
+      fetch('/api/insert/organisation', {
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -94115,7 +94115,7 @@ var CreateComponent = function (_Component) {
                 _react2.default.createElement(
                   'center',
                   null,
-                  'Fill form below to create an organization'
+                  'Fill form below to create an organisation'
                 )
               )
             ),
@@ -94128,13 +94128,13 @@ var CreateComponent = function (_Component) {
                 _react2.default.createElement(
                   'center',
                   null,
-                  'Organization name'
+                  'Organisation name'
                 )
               ),
               _react2.default.createElement(
                 _reactGridSystem.Col,
                 null,
-                _react2.default.createElement(_TextField2.default, { name: 'org_name', value: this.state.organization, onChange: this.change })
+                _react2.default.createElement(_TextField2.default, { name: 'org_name', value: this.state.organisation, onChange: this.change })
               )
             ),
             _react2.default.createElement(
