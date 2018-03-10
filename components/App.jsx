@@ -12,6 +12,7 @@ import DataWizard from './DataWizard';
 import AssetData from './AssetData';
 import Users from './Users';
 import Help from './Help';
+import CreateOrganization from './CreateOrganization';
 // import Callback from './Auth/callback';
 // import Auth from './Auth/Auth';
 // import history from './Auth/history';
@@ -43,6 +44,7 @@ const MainRoutes = () => {
               <Route path="/data" component={DataWizard} />
               <Route path="/users" component={Users} />
               <Route path="/help" component={Help} />
+              <Route path="/organization" component={CreateOrganization} />
             </div>
           </Route>
         </div>

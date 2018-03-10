@@ -149,7 +149,7 @@ router.post('/insert/asset/:assetID/datapoint/datatype/:dataTypeID', (req, res) 
 });
 
 // INSERT an organization
-router.post('/insert/orginization', (req, res) => {
+router.post('/insert/organization', (req, res) => {
   console.log(req.body.name);
   client.query(`INSERT INTO orginization (name) VALUES ('${req.body.name}')`)
     .then((result) => {

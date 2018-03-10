@@ -36,6 +36,7 @@ export default class App extends Component {
     this.props.history.push('/');
   }
 
+
   render() {
     return (
       <div>
@@ -53,6 +54,7 @@ export default class App extends Component {
           <MenuItem onClick={() => { return this.direct('/'); }}>Home</MenuItem>
           <MenuItem onClick={() => { return this.direct('/data'); }}>Add data / Data types</MenuItem>
           <MenuItem onClick={() => { return this.direct('/users'); }}>Users</MenuItem>
+          <MenuItem onClick={() => { return this.direct('/organization'); }}>Organization</MenuItem>
           <MenuItem onClick={() => { return this.direct('/help'); }}>Help</MenuItem>
         </Drawer>
         {this.props.children}
