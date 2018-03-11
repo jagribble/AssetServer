@@ -92,6 +92,12 @@ router.delete('/delete/:assetID', (req, res) => {
   });
 });
 
+router.delete('/delete/organisation/:id', (req, res) => {
+  client.query(`DELETE FROM Orginization WHERE orginizationID=${req.params.id}`).then((result) => {
+    res.send(result);
+  });
+});
+
 router.delete('/delete/dataType/:dataTypeID', (req, res) => {
   client.query(`DELETE FROM DataType WHERE dataTypeID=${req.params.dataTypeID}`).then((result) => {
     res.send(result);

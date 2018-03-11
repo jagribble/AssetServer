@@ -255,6 +255,6 @@ export default class AssetData extends Component {
         </div>
       );
     }
-      <Loading />;
+    return <Loading />;
   }
 }

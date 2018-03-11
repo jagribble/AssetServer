@@ -30602,7 +30602,7 @@ var AssetData = function (_Component) {
           )
         );
       }
-      _react2.default.createElement(_Loading2.default, null);
+      return _react2.default.createElement(_Loading2.default, null);
     }
   }]);
 
