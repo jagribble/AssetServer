@@ -30261,11 +30261,33 @@ var _Table = __webpack_require__(181);
 
 var _Card = __webpack_require__(24);
 
+var _RaisedButton = __webpack_require__(87);
+
+var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
+
+var _Dialog = __webpack_require__(318);
+
+var _Dialog2 = _interopRequireDefault(_Dialog);
+
+var _FlatButton = __webpack_require__(319);
+
+var _FlatButton2 = _interopRequireDefault(_FlatButton);
+
+var _TextField = __webpack_require__(61);
+
+var _TextField2 = _interopRequireDefault(_TextField);
+
+var _reactGridSystem = __webpack_require__(123);
+
 var _reactChartjs = __webpack_require__(184);
 
 var _GoogleMaps = __webpack_require__(180);
 
 var _GoogleMaps2 = _interopRequireDefault(_GoogleMaps);
+
+var _Loading = __webpack_require__(57);
+
+var _Loading2 = _interopRequireDefault(_Loading);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -30287,7 +30309,9 @@ var AssetData = function (_Component) {
       assetData: [],
       asset: {},
       lat: 0,
-      lng: 0
+      lng: 0,
+      dialogOpen: false,
+      assetDelete: ''
     };
 
     _this.getAssetData = _this.getAssetData.bind(_this);
@@ -30295,6 +30319,10 @@ var AssetData = function (_Component) {
     _this.getAsset = _this.getAsset.bind(_this);
     _this.getMap = _this.getMap.bind(_this);
     _this.getGraphData = _this.getGraphData.bind(_this);
+    _this.delete = _this.delete.bind(_this);
+    _this.handleClose = _this.handleClose.bind(_this);
+    _this.deleteChange = _this.deleteChange.bind(_this);
+    _this.deleteConfirm = _this.deleteConfirm.bind(_this);
     return _this;
   }
 
@@ -30425,59 +30453,156 @@ var AssetData = function (_Component) {
       return graphData;
     }
   }, {
+    key: 'delete',
+    value: function _delete() {
+      this.setState({
+        dialogOpen: true
+      });
+    }
+  }, {
+    key: 'deleteConfirm',
+    value: function deleteConfirm() {
+      var _this4 = this;
+
+      if (this.state.assetDelete === this.state.asset.assetname) {
+        // delete asset
+        fetch('/api/delete/' + this.state.asset.assetid, { method: 'delete' }).then(function (result) {
+          console.log(result);
+          return result.json();
+        }).catch(function (error) {
+          console.log(error);
+        }).then(function (res) {
+          console.log(res);
+          _this4.setState({
+            dialogOpen: false
+          }, function () {
+            _this4.props.history.push('/');
+          });
+        });
+      } else {
+        this.setState({ dialogOpen: false });
+      }
+    }
+  }, {
+    key: 'deleteChange',
+    value: function deleteChange(event) {
+      this.setState({ assetDelete: event.target.value });
+    }
+  }, {
+    key: 'handleClose',
+    value: function handleClose() {
+      this.setState({ dialogOpen: !this.state.dialogOpen });
+    }
+  }, {
     key: 'render',
     value: function render() {
-      // const center = { lat: this.state.lat, lng: this.state.lng };
-      console.log(this.getGraphData());
-      return _react2.default.createElement(
-        'div',
-        null,
-        _react2.default.createElement(
-          _Card.Card,
-          { style: { margin: '10px' } },
+      var actions = [_react2.default.createElement(_FlatButton2.default, {
+        label: 'Cancel',
+        primary: true,
+        onClick: this.handleClose
+      }), _react2.default.createElement(_FlatButton2.default, {
+        label: 'Delete',
+        style: { color: '#ff0000' },
+        onClick: this.deleteConfirm
+      })];
+      if (this.state.asset !== {}) {
+        return _react2.default.createElement(
+          'div',
+          null,
           _react2.default.createElement(
-            _Card.CardText,
-            null,
+            _Card.Card,
+            { style: { margin: '10px' } },
             _react2.default.createElement(
-              'h1',
+              _Card.CardText,
               null,
-              this.state.asset.assetname
-            ),
-            this.getMap(),
-            _react2.default.createElement(
-              _Table.Table,
-              { style: { marginTop: '1px' } },
               _react2.default.createElement(
-                _Table.TableHeader,
-                {
-                  displaySelectAll: false,
-                  adjustForCheckbox: false
-                },
+                _reactGridSystem.Row,
+                null,
                 _react2.default.createElement(
-                  _Table.TableRow,
+                  _reactGridSystem.Col,
                   null,
                   _react2.default.createElement(
-                    _Table.TableHeaderColumn,
+                    'h1',
                     null,
-                    'Data Value'
-                  ),
-                  _react2.default.createElement(
-                    _Table.TableHeaderColumn,
-                    null,
-                    'Timestamp'
+                    this.state.asset.assetname
                   )
+                ),
+                _react2.default.createElement(
+                  _reactGridSystem.Col,
+                  null,
+                  _react2.default.createElement(_RaisedButton2.default, {
+                    label: 'Delete',
+                    labelColor: '#ff0000',
+                    onTouchTap: this.delete,
+                    style: { float: 'right' }
+                  })
                 )
               ),
+              this.getMap(),
               _react2.default.createElement(
-                _Table.TableBody,
-                { displayRowCheckbox: false },
-                this.getDataRows()
+                _Table.Table,
+                { style: { marginTop: '1px' } },
+                _react2.default.createElement(
+                  _Table.TableHeader,
+                  {
+                    displaySelectAll: false,
+                    adjustForCheckbox: false
+                  },
+                  _react2.default.createElement(
+                    _Table.TableRow,
+                    null,
+                    _react2.default.createElement(
+                      _Table.TableHeaderColumn,
+                      null,
+                      'Data Value'
+                    ),
+                    _react2.default.createElement(
+                      _Table.TableHeaderColumn,
+                      null,
+                      'Timestamp'
+                    )
+                  )
+                ),
+                _react2.default.createElement(
+                  _Table.TableBody,
+                  { displayRowCheckbox: false },
+                  this.getDataRows()
+                )
+              ),
+              _react2.default.createElement(_reactChartjs.Line, { data: this.getGraphData }),
+              _react2.default.createElement(
+                _Dialog2.default,
+                {
+                  title: 'Delete' + this.state.asset.assetname,
+                  actions: actions,
+                  modal: false,
+                  open: this.state.dialogOpen,
+                  onRequestClose: this.handleClose
+                },
+                'Are you sure you want to delete\xA0',
+                _react2.default.createElement(
+                  'code',
+                  { style: { backgroundColor: '#d4d3d3' } },
+                  _react2.default.createElement(
+                    'i',
+                    null,
+                    this.state.asset.assetname
+                  )
+                ),
+                '? Do delete please enter the name of the asset below.',
+                _react2.default.createElement('br', null),
+                _react2.default.createElement(_TextField2.default, {
+                  name: 'assetDelete',
+                  hintText: 'Asset Name',
+                  value: this.state.assetDelete,
+                  onChange: this.deleteChange
+                })
               )
-            ),
-            _react2.default.createElement(_reactChartjs.Line, { data: this.getGraphData })
+            )
           )
-        )
-      );
+        );
+      }
+      _react2.default.createElement(_Loading2.default, null);
     }
   }]);
 

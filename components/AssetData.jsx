@@ -7,9 +7,15 @@ import {
   TableRow, TableRowColumn,
 } from 'material-ui/Table';
 import { Card, CardText } from 'material-ui/Card';
+import RaisedButton from 'material-ui/RaisedButton';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import TextField from 'material-ui/TextField';
+import { Row, Col } from 'react-grid-system';
 import { Line } from 'react-chartjs-2';
 
 import GoogleMap from './GoogleMaps';
+import Loading from './Loading';
 
 export default class AssetData extends Component {
   constructor(props) {
@@ -19,6 +25,8 @@ export default class AssetData extends Component {
       asset: {},
       lat: 0,
       lng: 0,
+      dialogOpen: false,
+      assetDelete: '',
     };
 
     this.getAssetData = this.getAssetData.bind(this);
@@ -26,6 +34,10 @@ export default class AssetData extends Component {
     this.getAsset = this.getAsset.bind(this);
     this.getMap = this.getMap.bind(this);
     this.getGraphData = this.getGraphData.bind(this);
+    this.delete = this.delete.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.deleteChange = this.deleteChange.bind(this);
+    this.deleteConfirm = this.deleteConfirm.bind(this);
   }
 
 
@@ -135,34 +147,114 @@ export default class AssetData extends Component {
     return graphData;
   }
 
-  render() {
-    // const center = { lat: this.state.lat, lng: this.state.lng };
-    console.log(this.getGraphData());
-    return (
-      <div>
-        <Card style={{ margin: '10px' }}>
-          <CardText>
-            <h1>{this.state.asset.assetname}</h1>
-            {this.getMap()}
-            <Table style={{ marginTop: '1px' }}>
-              <TableHeader
-                displaySelectAll={false}
-                adjustForCheckbox={false}
-              >
-                <TableRow>
-                  <TableHeaderColumn>Data Value</TableHeaderColumn>
-                  <TableHeaderColumn>Timestamp</TableHeaderColumn>
-                </TableRow>
-              </TableHeader>
-              <TableBody displayRowCheckbox={false}>
-                {this.getDataRows()}
-              </TableBody>
-            </Table>
-            <Line data={this.getGraphData} />
+  delete() {
+    this.setState({
+      dialogOpen: true,
+    });
+  }
 
-          </CardText>
-        </Card>
-      </div>
-    );
+  deleteConfirm() {
+    if (this.state.assetDelete === this.state.asset.assetname) {
+      // delete asset
+      fetch(`/api/delete/${this.state.asset.assetid}`, { method: 'delete' }).then((result) => {
+        console.log(result);
+        return result.json();
+      }).catch((error) => {
+        console.log(error);
+      }).then((res) => {
+        console.log(res);
+        this.setState({
+          dialogOpen: false,
+        }, () => {
+          this.props.history.push('/');
+        });
+      });
+    } else {
+      this.setState({ dialogOpen: false });
+    }
+  }
+
+  deleteChange(event) {
+    this.setState({ assetDelete: event.target.value });
+  }
+
+  handleClose() {
+    this.setState({ dialogOpen: !this.state.dialogOpen });
+  }
+
+  render() {
+    const actions = [
+      <FlatButton
+        label="Cancel"
+        primary
+        onClick={this.handleClose}
+      />,
+      <FlatButton
+        label="Delete"
+        style={{ color: '#ff0000' }}
+        onClick={this.deleteConfirm}
+      />,
+    ];
+    if (this.state.asset !== {}) {
+      return (
+        <div>
+          <Card style={{ margin: '10px' }}>
+            <CardText>
+              <Row>
+                <Col>
+                  <h1>{this.state.asset.assetname}</h1>
+                </Col>
+                <Col>
+                  <RaisedButton
+                    label="Delete"
+                    labelColor="#ff0000"
+                    onTouchTap={this.delete}
+                    style={{ float: 'right' }}
+                  />
+                </Col>
+              </Row>
+              {this.getMap()}
+              <Table style={{ marginTop: '1px' }}>
+                <TableHeader
+                  displaySelectAll={false}
+                  adjustForCheckbox={false}
+                >
+                  <TableRow>
+                    <TableHeaderColumn>Data Value</TableHeaderColumn>
+                    <TableHeaderColumn>Timestamp</TableHeaderColumn>
+                  </TableRow>
+                </TableHeader>
+                <TableBody displayRowCheckbox={false}>
+                  {this.getDataRows()}
+                </TableBody>
+              </Table>
+              <Line data={this.getGraphData} />
+              <Dialog
+                title={`Delete${this.state.asset.assetname}`}
+                actions={actions}
+                modal={false}
+                open={this.state.dialogOpen}
+                onRequestClose={this.handleClose}
+              >
+            Are you sure you want to delete&nbsp;
+                <code style={{ backgroundColor: '#d4d3d3' }}>
+                  <i>
+                    {this.state.asset.assetname}
+                  </i>
+                </code>?
+            Do delete please enter the name of the asset below.<br />
+                <TextField
+                  name="assetDelete"
+                  hintText="Asset Name"
+                  value={this.state.assetDelete}
+                  onChange={this.deleteChange}
+                />
+              </Dialog>
+            </CardText>
+          </Card>
+        </div>
+      );
+    }
+      <Loading />;
   }
 }
