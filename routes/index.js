@@ -78,7 +78,7 @@ router.get('/', (req, res) => {
 });
 // CREATE TABLE AppUser (userID VARCHAR(50) PRIMARY KEY,organizationID BIGINT,verified boolean)
 router.get('/change', (req, res) => {
-  client.query('SELECT * FROM AppUser').then((result) => {
+  client.query('DELETE FROM AppUser WHERE organizationID=3').then((result) => {
     res.send(result);
   });
 });
@@ -88,6 +88,18 @@ Delete routes
 */
 router.delete('/delete/:assetID', (req, res) => {
   client.query(`DELETE FROM Asset WHERE assetID=${req.params.assetID}`).then((result) => {
+    res.send(result);
+  });
+});
+
+router.delete('/delete/:userid', (req, res) => {
+  client.query(`DELETE FROM AppUser WHERE userID=${req.params.userid}`).then((result) => {
+    res.send(result);
+  });
+});
+
+router.delete('/delete/:dataPointID', (req, res) => {
+  client.query(`DELETE FROM DataPoint WHERE dataPointID=${req.params.dataPointID}`).then((result) => {
     res.send(result);
   });
 });
