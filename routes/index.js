@@ -5,6 +5,7 @@ const request = require('request');
 const router = express.Router();
 
 // connect to the postgres database
+// NOTE: pg (node-postgres) handles SQL injection automatically https://github.com/brianc/node-postgres/wiki/FAQ#8-does-node-postgres-handle-sql-injection
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: true,
