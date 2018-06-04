@@ -242,7 +242,7 @@ export default class AssetData extends Component {
                     {this.state.asset.assetname}
                   </i>
                 </code>?
-            Do delete please enter the name of the asset below.<br />
+            To delete please enter the name of the asset below.<br />
                 <TextField
                   name="assetDelete"
                   hintText="Asset Name"

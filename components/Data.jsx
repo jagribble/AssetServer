@@ -187,7 +187,7 @@ export default class Data extends Component {
       <div>
         <Card>
           <CardText>
-            <h2>Make a data type</h2>
+            <h2>Add Data</h2>
         Asset:
             <DropDownMenu
               maxHeight={300}
