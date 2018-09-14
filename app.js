@@ -3,9 +3,26 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
-const index = require('./routes/index');
 
 const app = express();
+const jwt = require('express-jwt');
+const jwks = require('jwks-rsa');
+const index = require('./routes/index');
+
+
+const jwtCheck = jwt({
+  secret: jwks.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: 'https://app79553870.auth0.com/.well-known/jwks.json',
+  }),
+  audience: 'https://assetar-stg.herokuapp.com/',
+  issuer: 'https://app79553870.auth0.com/',
+  algorithms: ['RS256'],
+});
+
+console.log(`Google API key = ${process.env.GOOGLE_API_KEY}`);
 console.log('running app.js');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -15,18 +32,30 @@ app.set('view engine', 'hbs');
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 
+if (process.env.AUTH === 'true') {
+  app.use('/api', jwtCheck, index);
 
-app.use('/', index);
+  app.use('/check', jwtCheck, (req, res, next) => {
+    res.send('successful');
+    next();
+  });
+} else {
+  app.use('/api', index);
+}
 
-
-// app.get('/', (req, res) => {
-//   // initialise empty array for results of db query
-//   res.send('hello');
-// });
+app.use('/', (req, res) => {
+  res.render('index');
+});
 //
 //
 // app.get('/test', (req, res) => {
