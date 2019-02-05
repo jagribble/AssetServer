@@ -4,7 +4,7 @@
   "private": true,
   "main": "app.js",
   "scripts": {
-    "prestart": "webpack"
+    "prestart": "webpack",
     "start": "node ./bin/www",
     "build": "webpack"
   },
